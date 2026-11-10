@@ -5,76 +5,79 @@ export interface AudioDefinition {
 
 export type PlaybackResult = 'ended' | 'error' | 'unavailable'
 
+const publicAsset = (path: string) =>
+  `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`
+
 export const audioLibrary: Record<string, AudioDefinition> = {
-  'sound-m': { id: 'sound-m', src: '/audio/sounds/m.wav' },
-  'sound-s': { id: 'sound-s', src: '/audio/sounds/s.wav' },
+  'sound-m': { id: 'sound-m', src: publicAsset('audio/sounds/m.wav') },
+  'sound-s': { id: 'sound-s', src: publicAsset('audio/sounds/s.wav') },
   'welcome-instruction': {
     id: 'welcome-instruction',
-    src: '/audio/lesson-1/welcome.wav',
+    src: publicAsset('audio/lesson-1/welcome.wav'),
   },
   'm-intro-instruction': {
     id: 'm-intro-instruction',
-    src: '/audio/lesson-1/m-intro.wav',
+    src: publicAsset('audio/lesson-1/m-intro.wav'),
   },
   'trace-m-instruction': {
     id: 'trace-m-instruction',
-    src: '/audio/lesson-1/trace-m.wav',
+    src: publicAsset('audio/lesson-1/trace-m.wav'),
   },
   'm-replay-instruction': {
     id: 'm-replay-instruction',
-    src: '/audio/lesson-1/m-what-sound.wav',
+    src: publicAsset('audio/lesson-1/m-what-sound.wav'),
   },
   'moon-instruction': {
     id: 'moon-instruction',
-    src: '/audio/lesson-1/moon-m.wav',
+    src: publicAsset('audio/lesson-1/moon-m.wav'),
   },
   'mouse-instruction': {
     id: 'mouse-instruction',
-    src: '/audio/lesson-1/mouse-m.wav',
+    src: publicAsset('audio/lesson-1/mouse-m.wav'),
   },
   'motorcycle-instruction': {
     id: 'motorcycle-instruction',
-    src: '/audio/lesson-1/motorcycle-m.wav',
+    src: publicAsset('audio/lesson-1/motorcycle-m.wav'),
   },
   'review-sound-instruction': {
     id: 'review-sound-instruction',
-    src: '/audio/lesson-1/review-sound.wav',
+    src: publicAsset('audio/lesson-1/review-sound.wav'),
   },
   's-intro-instruction': {
     id: 's-intro-instruction',
-    src: '/audio/lesson-1/s-intro.wav',
+    src: publicAsset('audio/lesson-1/s-intro.wav'),
   },
   'trace-s-instruction': {
     id: 'trace-s-instruction',
-    src: '/audio/lesson-1/trace-s.wav',
+    src: publicAsset('audio/lesson-1/trace-s.wav'),
   },
   's-replay-instruction': {
     id: 's-replay-instruction',
-    src: '/audio/lesson-1/s-what-sound.wav',
+    src: publicAsset('audio/lesson-1/s-what-sound.wav'),
   },
   'sun-instruction': {
     id: 'sun-instruction',
-    src: '/audio/lesson-1/sun-s.wav',
+    src: publicAsset('audio/lesson-1/sun-s.wav'),
   },
   'sock-instruction': {
     id: 'sock-instruction',
-    src: '/audio/lesson-1/sock-s.wav',
+    src: publicAsset('audio/lesson-1/sock-s.wav'),
   },
   'find-m-instruction': {
     id: 'find-m-instruction',
-    src: '/audio/lesson-1/find-m.wav',
+    src: publicAsset('audio/lesson-1/find-m.wav'),
   },
   'find-s-instruction': {
     id: 'find-s-instruction',
-    src: '/audio/lesson-1/find-s.wav',
+    src: publicAsset('audio/lesson-1/find-s.wav'),
   },
   'review-instruction': {
     id: 'review-instruction',
-    src: '/audio/lesson-1/tap-the-sounds.wav',
+    src: publicAsset('audio/lesson-1/tap-the-sounds.wav'),
   },
   'celebration-instruction': {
     id: 'celebration-instruction',
-    src: '/audio/lesson-1/great-reading.wav',
+    src: publicAsset('audio/lesson-1/great-reading.wav'),
   },
 }
 
