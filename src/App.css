@@ -31,6 +31,12 @@ button {
   align-items: center;
 }
 
+.lesson-list {
+  width: min(420px, 80vw);
+  display: grid;
+  gap: 18px;
+}
+
 .home-unicorn {
   width: clamp(126px, 20vh, 190px);
   aspect-ratio: 1;
@@ -49,7 +55,7 @@ button {
 }
 
 .lesson-button {
-  width: min(420px, 80vw);
+  width: 100%;
   min-height: 112px;
   display: flex;
   align-items: center;
@@ -79,6 +85,7 @@ button {
   --instruction-text-color: #111;
   --letter-m-color: #6842a8;
   --letter-s-color: #b52f69;
+  --letter-a-color: #24733f;
   position: relative;
   height: 100svh;
   min-height: 500px;
@@ -187,6 +194,10 @@ button {
 
 .sound-button--m { color: var(--letter-m-color); }
 .sound-button--s { color: var(--letter-s-color); }
+.sound-button--a {
+  color: var(--letter-a-color);
+  font-family: Arial, Helvetica, sans-serif;
+}
 
 .sound-button--hero {
   width: min(52vh, 46vw);
@@ -248,11 +259,87 @@ button {
 }
 
 .choice-screen {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: clamp(18px, 3vh, 28px);
+}
+
+.picture-choice-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(26px, 5vh, 46px);
+}
+
+.picture-choice-content {
+  width: min(900px, 74vw);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(22px, 4vw, 58px);
+}
+
+.picture-choice-button {
+  width: min(30vh, 20vw);
+  height: min(30vh, 20vw);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.picture-choice-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.picture-choice-button:active {
+  transform: scale(0.96);
+}
+
+.choice-content--3 {
+  width: min(900px, 74vw);
+  gap: clamp(22px, 4vw, 58px);
+}
+
+.choice-content--3 .sound-button--choice {
+  width: min(32vh, 21vw);
+  height: min(32vh, 21vw);
+  font-size: min(29vh, 19vw);
+}
+
+.choice-stars {
+  position: absolute;
+  inset: 18% 22%;
+  pointer-events: none;
+}
+
+.choice-stars span {
+  position: absolute;
+  color: #e9a63d;
+  font-size: clamp(28px, 4vw, 46px);
+  opacity: 0;
+  animation: choice-star-pop 900ms ease-out forwards;
+}
+
+.choice-stars span:nth-child(1) { left: 10%; top: 48%; color: #9c7bd1; }
+.choice-stars span:nth-child(2) { left: 48%; top: 2%; animation-delay: 80ms; }
+.choice-stars span:nth-child(3) { right: 8%; top: 52%; animation-delay: 150ms; color: #68b7bd; }
+
+@keyframes choice-star-pop {
+  0% { opacity: 0; transform: translateY(8px) scale(0.35) rotate(-12deg); }
+  35% { opacity: 1; transform: translateY(0) scale(1.08) rotate(6deg); }
+  72% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-12px) scale(0.86) rotate(14deg); }
 }
 
 .choice-prompt {

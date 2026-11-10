@@ -1,8 +1,16 @@
+import alligatorImage from './assets/pictures/alligator.png'
+import antImage from './assets/pictures/ant.png'
+import antelopeImage from './assets/pictures/antelope.png'
+import appleImage from './assets/pictures/apple.png'
+import basketballImage from './assets/pictures/basketball.png'
+import duckImage from './assets/pictures/duck.png'
 import moonImage from './assets/pictures/moon.png'
 import motorcycleImage from './assets/pictures/motorcycle.png'
 import mouseImage from './assets/pictures/mouse.png'
+import rabbitImage from './assets/pictures/rabbit.png'
 import sockImage from './assets/pictures/sock.png'
 import sunImage from './assets/pictures/sun.png'
+import turtleImage from './assets/pictures/turtle.png'
 import type {
   LessonDefinition,
   LessonScreen,
@@ -14,6 +22,7 @@ import type {
 export const sounds: Record<string, SoundDefinition> = {
   m: { id: 'm', display: 'm', audioId: 'sound-m' },
   s: { id: 's', display: 's', audioId: 'sound-s' },
+  a: { id: 'a', display: 'a', audioId: 'sound-a' },
 }
 
 export const pictures: Record<string, PictureDefinition> = {
@@ -51,6 +60,34 @@ export const pictures: Record<string, PictureDefinition> = {
     image: sockImage,
     soundId: 's',
     audioId: 'sock-instruction',
+  },
+  apple: {
+    id: 'apple',
+    label: 'Apple',
+    image: appleImage,
+    soundId: 'a',
+    audioId: 'apple-instruction',
+  },
+  ant: {
+    id: 'ant',
+    label: 'Ant',
+    image: antImage,
+    soundId: 'a',
+    audioId: 'ant-instruction',
+  },
+  antelope: {
+    id: 'antelope',
+    label: 'Antelope',
+    image: antelopeImage,
+    soundId: 'a',
+    audioId: 'antelope-instruction',
+  },
+  alligator: {
+    id: 'alligator',
+    label: 'Alligator',
+    image: alligatorImage,
+    soundId: 'a',
+    audioId: 'alligator-instruction',
   },
 }
 
@@ -206,6 +243,165 @@ export const lessonOne: LessonDefinition = {
     },
   ],
 }
+
+export const lessonTwo: LessonDefinition = {
+  id: 2,
+  title: 'Lesson 2',
+  screens: [
+    {
+      id: 'lesson-2-welcome',
+      type: 'welcome',
+      title: 'Another Sound',
+      instructionAudioId: 'lesson-2-welcome-instruction',
+    },
+    {
+      id: 'review-m-s',
+      type: 'soundChoice',
+      sounds: ['m', 's'],
+      instructionAudioId: 'review-instruction',
+    },
+    {
+      id: 'review-find-m',
+      type: 'soundChoice',
+      sounds: ['m', 's'],
+      prompt: 'Tap the letter that makes the sound:',
+      requestedSoundId: 'm',
+      correctFeedback: 'stars',
+      instructionAudioId: 'find-m-instruction',
+    },
+    {
+      id: 'introduce-a',
+      type: 'sound',
+      soundId: 'a',
+      instructionAudioId: 'a-intro-instruction',
+    },
+    {
+      id: 'replay-a',
+      type: 'sound',
+      soundId: 'a',
+      prompt: 'What sound is this? Say the sound, then press the arrow.',
+      instructionAudioId: 'a-replay-instruction',
+    },
+    {
+      id: 'apple',
+      type: 'picture',
+      pictureId: 'apple',
+      instructionAudioId: 'apple-instruction',
+    },
+    {
+      id: 'ant',
+      type: 'picture',
+      pictureId: 'ant',
+      instructionAudioId: 'ant-instruction',
+    },
+    {
+      id: 'find-a-two-choices',
+      type: 'soundChoice',
+      sounds: ['a', 's'],
+      prompt: 'Tap the letter that makes the sound:',
+      requestedSoundId: 'a',
+      correctFeedback: 'stars',
+      instructionAudioId: 'find-a-instruction',
+    },
+    {
+      id: 'find-s-three-choices',
+      type: 'soundChoice',
+      sounds: ['m', 'a', 's'],
+      prompt: 'Tap the letter that makes the sound:',
+      requestedSoundId: 's',
+      correctFeedback: 'stars',
+      instructionAudioId: 'find-s-instruction',
+    },
+    {
+      id: 'antelope',
+      type: 'picture',
+      pictureId: 'antelope',
+      instructionAudioId: 'antelope-instruction',
+    },
+    {
+      id: 'alligator',
+      type: 'picture',
+      pictureId: 'alligator',
+      instructionAudioId: 'alligator-instruction',
+    },
+    {
+      id: 'mixed-find-s',
+      type: 'soundChoice',
+      sounds: ['m', 's', 'a'],
+      prompt: 'Tap the letter that makes the sound:',
+      requestedSoundId: 's',
+      correctFeedback: 'stars',
+      instructionAudioId: 'find-s-instruction',
+    },
+    {
+      id: 'picture-choice-s',
+      type: 'pictureChoice',
+      prompt: 'Tap the picture that begins with the letter s.',
+      instructionAudioId: 'tap-picture-s-instruction',
+      choices: [
+        {
+          id: 'turtle',
+          label: 'Turtle',
+          image: turtleImage,
+          responseAudioId: 'turtle-response',
+        },
+        {
+          id: 'basketball',
+          label: 'Basketball',
+          image: basketballImage,
+          responseAudioId: 'basketball-response',
+        },
+        {
+          id: 'sun',
+          label: 'Sun',
+          image: sunImage,
+          responseAudioId: 'sun-correct-response',
+          correct: true,
+        },
+      ],
+    },
+    {
+      id: 'picture-choice-m',
+      type: 'pictureChoice',
+      prompt: 'Tap the picture that begins with the letter m.',
+      instructionAudioId: 'tap-picture-m-instruction',
+      choices: [
+        {
+          id: 'mouse',
+          label: 'Mouse',
+          image: mouseImage,
+          responseAudioId: 'mouse-correct-response',
+          correct: true,
+        },
+        {
+          id: 'rabbit',
+          label: 'Rabbit',
+          image: rabbitImage,
+          responseAudioId: 'rabbit-response',
+        },
+        {
+          id: 'duck',
+          label: 'Duck',
+          image: duckImage,
+          responseAudioId: 'duck-response',
+        },
+      ],
+    },
+    {
+      id: 'review-m-s-a',
+      type: 'soundChoice',
+      sounds: ['m', 's', 'a'],
+      instructionAudioId: 'review-instruction',
+    },
+    {
+      id: 'lesson-2-celebration',
+      type: 'celebration',
+      instructionAudioId: 'celebration-instruction',
+    },
+  ],
+}
+
+export const lessons = [lessonOne, lessonTwo]
 
 const shuffled = <T,>(items: T[]) =>
   Math.random() < 0.5 ? [...items] : [...items].reverse()

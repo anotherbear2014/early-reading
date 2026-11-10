@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { audioService, lessonOneAudioIds } from './audio'
+import { audioService } from './audio'
 import unicornImage from './assets/unicorn.png'
 import { LetterTracing } from './components/LetterTracing'
 import { UnicornInstructor } from './components/UnicornInstructor'
-import { createLessonRun, lessonOne, pictures, sounds } from './lessonData'
-import type { LessonScreen, SoundId } from './lessonTypes'
+import { createLessonRun, lessons, pictures, sounds } from './lessonData'
+import type { LessonDefinition, LessonScreen, SoundId } from './lessonTypes'
 import './App.css'
 
 interface SoundButtonProps {
   soundId: SoundId
   size: 'hero' | 'choice' | 'small'
+  onActivate?: (soundId: SoundId) => void
 }
 
-function SoundButton({ soundId, size }: SoundButtonProps) {
+function SoundButton({ soundId, size, onActivate }: SoundButtonProps) {
   const sound = sounds[soundId]
 
   return (
@@ -20,14 +21,31 @@ function SoundButton({ soundId, size }: SoundButtonProps) {
       className={`sound-button sound-button--${size} sound-button--${soundId}`}
       type="button"
       aria-label={`Play the ${sound.display} sound`}
-      onClick={() => void audioService.play(sound.audioId)}
+      onClick={() => {
+        void audioService.play(sound.audioId)
+        onActivate?.(soundId)
+      }}
     >
       {sound.display}
     </button>
   )
 }
 
+function ChoiceStars({ animationKey }: { animationKey: number }) {
+  if (animationKey === 0) return null
+
+  return (
+    <div className="choice-stars" key={animationKey} aria-hidden="true">
+      <span>★</span>
+      <span>✦</span>
+      <span>★</span>
+    </div>
+  )
+}
+
 function ScreenContent({ screen }: { screen: LessonScreen }) {
+  const [choiceCelebration, setChoiceCelebration] = useState(0)
+
   if (screen.type === 'welcome') {
     return (
       <div className="welcome-content">
@@ -64,14 +82,53 @@ function ScreenContent({ screen }: { screen: LessonScreen }) {
   }
 
   if (screen.type === 'soundChoice') {
+    const handleChoice = (soundId: SoundId) => {
+      if (soundId === screen.requestedSoundId && screen.correctFeedback === 'stars') {
+        setChoiceCelebration((value) => value + 1)
+      }
+    }
+
     return (
       <div className={`choice-screen${screen.prompt ? ' has-prompt' : ''}`}>
         {screen.prompt && <h2 className="choice-prompt">{screen.prompt}</h2>}
-        <div className="choice-content">
+        <div className={`choice-content choice-content--${screen.sounds.length}`}>
           {screen.sounds.map((soundId) => (
-            <SoundButton key={soundId} soundId={soundId} size="choice" />
+            <SoundButton
+              key={soundId}
+              soundId={soundId}
+              size="choice"
+              onActivate={handleChoice}
+            />
           ))}
         </div>
+        <ChoiceStars animationKey={choiceCelebration} />
+      </div>
+    )
+  }
+
+  if (screen.type === 'pictureChoice') {
+    const handlePictureChoice = (responseAudioId: string, correct?: boolean) => {
+      void audioService.play(responseAudioId)
+      if (correct) setChoiceCelebration((value) => value + 1)
+    }
+
+    return (
+      <div className="picture-choice-screen">
+        <h2 className="choice-prompt">{screen.prompt}</h2>
+        <div className="picture-choice-content">
+          {screen.choices.map((choice) => (
+            <button
+              className="picture-choice-button"
+              type="button"
+              aria-label={`Choose ${choice.label}`}
+              onClick={() => handlePictureChoice(choice.responseAudioId, choice.correct)}
+              key={choice.id}
+            >
+              <img src={choice.image} alt={choice.label} />
+            </button>
+          ))}
+        </div>
+        <ChoiceStars animationKey={choiceCelebration} />
       </div>
     )
   }
@@ -93,16 +150,25 @@ function ScreenContent({ screen }: { screen: LessonScreen }) {
   )
 }
 
-function HomeScreen({ onStart }: { onStart: () => void }) {
+function HomeScreen({ onStart }: { onStart: (lesson: LessonDefinition) => void }) {
   return (
     <main className="home-screen">
       <div className="home-card">
         <img className="home-unicorn" src={unicornImage} alt="Friendly unicorn" />
         <h1>Reading</h1>
-        <button className="lesson-button" type="button" onClick={onStart}>
-          Lesson 1
-          <span aria-hidden="true">→</span>
-        </button>
+        <div className="lesson-list">
+          {lessons.map((lesson) => (
+            <button
+              className="lesson-button"
+              type="button"
+              onClick={() => onStart(lesson)}
+              key={lesson.id}
+            >
+              {lesson.title}
+              <span aria-hidden="true">→</span>
+            </button>
+          ))}
+        </div>
       </div>
     </main>
   )
@@ -203,16 +269,18 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
 
       {showLessonNavigation && (
         <>
-          <button
-            className="lesson-navigation-control back-control"
-            type="button"
-            onClick={goBack}
-            aria-label="Back"
-          >
-            <svg viewBox="0 0 96 96" aria-hidden="true">
-              <path d="M81 48H24M43 25 20 48l23 23" />
-            </svg>
-          </button>
+          {screenIndex > 0 && (
+            <button
+              className="lesson-navigation-control back-control"
+              type="button"
+              onClick={goBack}
+              aria-label="Back"
+            >
+              <svg viewBox="0 0 96 96" aria-hidden="true">
+                <path d="M81 48H24M43 25 20 48l23 23" />
+              </svg>
+            </button>
+          )}
           <button
             className="lesson-navigation-control next-control"
             type="button"
@@ -250,13 +318,28 @@ function App() {
   const runCounter = useRef(0)
   const [lessonRun, setLessonRun] = useState<{
     id: number
+    lesson: LessonDefinition
     screens: LessonScreen[]
   } | null>(null)
 
-  const startLesson = () => {
-    audioService.preload(lessonOneAudioIds)
+  const startLesson = (lesson: LessonDefinition) => {
+    const responseAudioIds = lesson.screens.flatMap((screen) =>
+      screen.type === 'pictureChoice'
+        ? screen.choices.map((choice) => choice.responseAudioId)
+        : [],
+    )
+    const audioIds = [
+      ...Object.values(sounds).map((sound) => sound.audioId),
+      ...lesson.screens.map((screen) => screen.instructionAudioId),
+      ...responseAudioIds,
+    ]
+    audioService.preload([...new Set(audioIds)])
     runCounter.current += 1
-    setLessonRun({ id: runCounter.current, screens: createLessonRun(lessonOne) })
+    setLessonRun({
+      id: runCounter.current,
+      lesson,
+      screens: createLessonRun(lesson),
+    })
   }
   const goHome = () => setLessonRun(null)
 
@@ -269,7 +352,7 @@ function App() {
       key={lessonRun.id}
       screens={lessonRun.screens}
       onHome={goHome}
-      onRepeat={startLesson}
+      onRepeat={() => startLesson(lessonRun.lesson)}
     />
   )
 }

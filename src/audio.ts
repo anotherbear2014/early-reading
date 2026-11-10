@@ -11,6 +11,7 @@ const publicAsset = (path: string) =>
 export const audioLibrary: Record<string, AudioDefinition> = {
   'sound-m': { id: 'sound-m', src: publicAsset('audio/sounds/m.wav') },
   'sound-s': { id: 'sound-s', src: publicAsset('audio/sounds/s.wav') },
+  'sound-a': { id: 'sound-a', src: publicAsset('audio/sounds/a.wav') },
   'welcome-instruction': {
     id: 'welcome-instruction',
     src: publicAsset('audio/lesson-1/welcome.wav'),
@@ -79,29 +80,71 @@ export const audioLibrary: Record<string, AudioDefinition> = {
     id: 'celebration-instruction',
     src: publicAsset('audio/lesson-1/great-reading.wav'),
   },
+  'lesson-2-welcome-instruction': {
+    id: 'lesson-2-welcome-instruction',
+    src: publicAsset('audio/lesson-2/welcome.wav'),
+  },
+  'a-intro-instruction': {
+    id: 'a-intro-instruction',
+    src: publicAsset('audio/lesson-2/a-intro.wav'),
+  },
+  'a-replay-instruction': {
+    id: 'a-replay-instruction',
+    src: publicAsset('audio/lesson-2/a-what-sound.wav'),
+  },
+  'apple-instruction': {
+    id: 'apple-instruction',
+    src: publicAsset('audio/lesson-2/apple-a.wav'),
+  },
+  'ant-instruction': {
+    id: 'ant-instruction',
+    src: publicAsset('audio/lesson-2/ant-a.wav'),
+  },
+  'antelope-instruction': {
+    id: 'antelope-instruction',
+    src: publicAsset('audio/lesson-2/antelope-a.wav'),
+  },
+  'alligator-instruction': {
+    id: 'alligator-instruction',
+    src: publicAsset('audio/lesson-2/alligator-a.wav'),
+  },
+  'find-a-instruction': {
+    id: 'find-a-instruction',
+    src: publicAsset('audio/lesson-2/find-a.wav'),
+  },
+  'tap-picture-s-instruction': {
+    id: 'tap-picture-s-instruction',
+    src: publicAsset('audio/lesson-2/tap-picture-begins-with-s.wav'),
+  },
+  'sun-correct-response': {
+    id: 'sun-correct-response',
+    src: publicAsset('audio/lesson-2/yes-thats-the-sun-good-job.wav'),
+  },
+  'basketball-response': {
+    id: 'basketball-response',
+    src: publicAsset('audio/lesson-2/basketball.wav'),
+  },
+  'turtle-response': {
+    id: 'turtle-response',
+    src: publicAsset('audio/lesson-2/turtle.wav'),
+  },
+  'tap-picture-m-instruction': {
+    id: 'tap-picture-m-instruction',
+    src: publicAsset('audio/lesson-2/tap-picture-begins-with-m.wav'),
+  },
+  'mouse-correct-response': {
+    id: 'mouse-correct-response',
+    src: publicAsset('audio/lesson-2/yes-thats-a-mouse-good-job.wav'),
+  },
+  'rabbit-response': {
+    id: 'rabbit-response',
+    src: publicAsset('audio/lesson-2/rabbit.wav'),
+  },
+  'duck-response': {
+    id: 'duck-response',
+    src: publicAsset('audio/lesson-2/duck.wav'),
+  },
 }
-
-export const lessonOneAudioIds = [
-  'sound-m',
-  'sound-s',
-  'welcome-instruction',
-  'm-intro-instruction',
-  'trace-m-instruction',
-  'm-replay-instruction',
-  'moon-instruction',
-  'mouse-instruction',
-  'motorcycle-instruction',
-  'review-sound-instruction',
-  's-intro-instruction',
-  'trace-s-instruction',
-  's-replay-instruction',
-  'sun-instruction',
-  'sock-instruction',
-  'find-m-instruction',
-  'find-s-instruction',
-  'review-instruction',
-  'celebration-instruction',
-]
 
 type SpeakingListener = (speaking: boolean) => void
 
