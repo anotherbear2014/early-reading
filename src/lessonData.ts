@@ -601,7 +601,51 @@ export const lessonThree: LessonDefinition = {
   ],
 }
 
-export const lessons = [lessonOne, lessonTwo, lessonThree]
+export const lessonFour: LessonDefinition = {
+  id: 4,
+  title: 'Lesson 4',
+  screens: [
+    {
+      id: 'lesson-4-welcome',
+      type: 'welcome',
+      title: 'Let’s put sounds together!',
+      instructionAudioId: 'lesson-4-welcome-instruction',
+    },
+    {
+      id: 'lesson-4-sound-review',
+      type: 'soundChoice',
+      sounds: ['m', 's', 'a', 't', 'r'],
+      instructionAudioId: 'review-instruction',
+    },
+    {
+      id: 'blend-at',
+      type: 'blend',
+      instructionAudioId: 'at-blend',
+      blend: {
+        word: 'at',
+        blendAudioId: 'at-blend',
+        wordAudioId: 'at-word',
+        pauseAfterBlendMs: 300,
+        segments: [
+          {
+            soundId: 'a',
+            startSeconds: 0,
+            endSeconds: 1.16,
+            fadeDurationSeconds: 1.16,
+          },
+          {
+            soundId: 't',
+            startSeconds: 1.16,
+            endSeconds: 'audio-end',
+            fadeDurationSeconds: 0.14,
+          },
+        ],
+      },
+    },
+  ],
+}
+
+export const lessons = [lessonOne, lessonTwo, lessonThree, lessonFour]
 
 const shuffled = <T,>(items: T[]) =>
   Math.random() < 0.5 ? [...items] : [...items].reverse()

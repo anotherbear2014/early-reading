@@ -79,6 +79,26 @@ export interface TracingScreen extends BaseScreen {
   tracing: TracingDefinition
 }
 
+export interface BlendSegment {
+  soundId: SoundId
+  startSeconds: number
+  endSeconds: number | 'audio-end'
+  fadeDurationSeconds: number
+}
+
+export interface BlendDefinition {
+  word: string
+  blendAudioId: string
+  wordAudioId: string
+  pauseAfterBlendMs: number
+  segments: BlendSegment[]
+}
+
+export interface BlendScreen extends BaseScreen {
+  type: 'blend'
+  blend: BlendDefinition
+}
+
 export interface CelebrationScreen extends BaseScreen {
   type: 'celebration'
 }
@@ -90,6 +110,7 @@ export type LessonScreen =
   | SoundChoiceScreen
   | PictureChoiceScreen
   | TracingScreen
+  | BlendScreen
   | CelebrationScreen
 
 export interface LessonDefinition {

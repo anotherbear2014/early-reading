@@ -202,6 +202,18 @@ export const audioLibrary: Record<string, AudioDefinition> = {
     id: 'tap-r-instruction',
     src: publicAsset('audio/prompts/tap-r.wav'),
   },
+  'lesson-4-welcome-instruction': {
+    id: 'lesson-4-welcome-instruction',
+    src: publicAsset('audio/lesson-4/welcome.wav'),
+  },
+  'at-blend': {
+    id: 'at-blend',
+    src: publicAsset('audio/lesson-4/at-blend.wav'),
+  },
+  'at-word': {
+    id: 'at-word',
+    src: publicAsset('audio/lesson-4/at-word.wav'),
+  },
 }
 
 type SpeakingListener = (speaking: boolean) => void
@@ -212,6 +224,10 @@ class AudioService {
   private activeListener: SpeakingListener | null = null
   private activeCompletion: ((result: PlaybackResult) => void) | null = null
   private playbackNumber = 0
+
+  get currentTimeSeconds() {
+    return this.activeAudio?.currentTime ?? 0
+  }
 
   preload(audioIds: string[]) {
     for (const audioId of audioIds) {

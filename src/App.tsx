@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { audioService } from './audio'
 import unicornImage from './assets/unicorn.png'
+import { BlendScreen } from './components/BlendScreen'
 import { LetterTracing } from './components/LetterTracing'
 import { UnicornInstructor } from './components/UnicornInstructor'
 import { createLessonRun, lessons, pictures, sounds } from './lessonData'
@@ -43,7 +44,19 @@ function ChoiceStars({ animationKey }: { animationKey: number }) {
   )
 }
 
-function ScreenContent({ screen }: { screen: LessonScreen }) {
+interface ScreenContentProps {
+  screen: LessonScreen
+  blendReplayToken: number
+  onBlendComplete: () => void
+  onSpeakingChange: (speaking: boolean) => void
+}
+
+function ScreenContent({
+  screen,
+  blendReplayToken,
+  onBlendComplete,
+  onSpeakingChange,
+}: ScreenContentProps) {
   const [choiceCelebration, setChoiceCelebration] = useState(0)
 
   if (screen.type === 'welcome') {
@@ -137,6 +150,17 @@ function ScreenContent({ screen }: { screen: LessonScreen }) {
     return <LetterTracing definition={screen.tracing} />
   }
 
+  if (screen.type === 'blend') {
+    return (
+      <BlendScreen
+        definition={screen.blend}
+        replayToken={blendReplayToken}
+        onDemonstrationComplete={onBlendComplete}
+        onSpeakingChange={onSpeakingChange}
+      />
+    )
+  }
+
   return (
     <div className="celebration-content" aria-label="Lesson complete">
       <div className="celebration-stars" aria-hidden="true">
@@ -184,6 +208,7 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
   const [screenIndex, setScreenIndex] = useState(0)
   const [readyScreenId, setReadyScreenId] = useState<string | null>(null)
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [blendReplayToken, setBlendReplayToken] = useState(0)
   const screen = screens[screenIndex]
   const isCelebration = screen.type === 'celebration'
   const nextEnabled = readyScreenId === screen.id
@@ -194,6 +219,8 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
   }, [screen.instructionAudioId])
 
   useEffect(() => {
+    if (screen.type === 'blend') return
+
     let active = true
     let fallbackTimer = 0
 
@@ -213,7 +240,7 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
       window.clearTimeout(fallbackTimer)
       audioService.stop()
     }
-  }, [playInstruction, screen.id])
+  }, [playInstruction, screen.id, screen.type])
 
   const goHome = () => {
     audioService.stop()
@@ -223,6 +250,10 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
   const goNext = () => {
     if (!nextEnabled || isCelebration) return
     audioService.stop()
+    if (screenIndex === screens.length - 1) {
+      onHome()
+      return
+    }
     setReadyScreenId(null)
     setScreenIndex((index) => Math.min(index + 1, screens.length - 1))
   }
@@ -238,8 +269,16 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
   }
 
   const repeatInstruction = () => {
+    if (screen.type === 'blend') {
+      setBlendReplayToken((token) => token + 1)
+      return
+    }
     void playInstruction()
   }
+
+  const handleBlendComplete = useCallback(() => {
+    setReadyScreenId(screen.id)
+  }, [screen.id])
 
   return (
     <main className="lesson-screen">
@@ -250,7 +289,12 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
       </button>
 
       <div className="lesson-content" key={screen.id}>
-        <ScreenContent screen={screen} />
+        <ScreenContent
+          screen={screen}
+          blendReplayToken={blendReplayToken}
+          onBlendComplete={handleBlendComplete}
+          onSpeakingChange={setIsSpeaking}
+        />
       </div>
 
       <button
@@ -324,6 +368,9 @@ function App() {
 
   const startLesson = (lesson: LessonDefinition) => {
     const responseAudioIds = lesson.screens.flatMap((screen) => {
+      if (screen.type === 'blend') {
+        return [screen.blend.blendAudioId, screen.blend.wordAudioId]
+      }
       if (screen.type === 'pictureChoice') {
         return screen.choices.map((choice) => choice.responseAudioId)
       }
