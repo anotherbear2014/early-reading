@@ -86,6 +86,8 @@ button {
   --letter-m-color: #6842a8;
   --letter-s-color: #b52f69;
   --letter-a-color: #24733f;
+  --letter-t-color: #d46a18;
+  --letter-r-color: #2563a9;
   position: relative;
   height: 100svh;
   min-height: 500px;
@@ -194,10 +196,15 @@ button {
 
 .sound-button--m { color: var(--letter-m-color); }
 .sound-button--s { color: var(--letter-s-color); }
-.sound-button--a {
-  color: var(--letter-a-color);
+.sound-button--a,
+.sound-button--t,
+.sound-button--r {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.sound-button--a { color: var(--letter-a-color); }
+.sound-button--t { color: var(--letter-t-color); }
+.sound-button--r { color: var(--letter-r-color); }
 
 .sound-button--hero {
   width: min(52vh, 46vw);
@@ -315,6 +322,17 @@ button {
   width: min(32vh, 21vw);
   height: min(32vh, 21vw);
   font-size: min(29vh, 19vw);
+}
+
+.choice-content--5 {
+  width: min(980px, 78vw);
+  gap: clamp(8px, 1.8vw, 26px);
+}
+
+.choice-content--5 .sound-button--choice {
+  width: min(25vh, 13vw);
+  height: min(25vh, 13vw);
+  font-size: min(23vh, 12vw);
 }
 
 .choice-stars {

@@ -323,11 +323,15 @@ function App() {
   } | null>(null)
 
   const startLesson = (lesson: LessonDefinition) => {
-    const responseAudioIds = lesson.screens.flatMap((screen) =>
-      screen.type === 'pictureChoice'
-        ? screen.choices.map((choice) => choice.responseAudioId)
-        : [],
-    )
+    const responseAudioIds = lesson.screens.flatMap((screen) => {
+      if (screen.type === 'pictureChoice') {
+        return screen.choices.map((choice) => choice.responseAudioId)
+      }
+      if (screen.type === 'picture') {
+        return [pictures[screen.pictureId].audioId]
+      }
+      return []
+    })
     const audioIds = [
       ...Object.values(sounds).map((sound) => sound.audioId),
       ...lesson.screens.map((screen) => screen.instructionAudioId),

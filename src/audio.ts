@@ -12,6 +12,8 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   'sound-m': { id: 'sound-m', src: publicAsset('audio/sounds/m.wav') },
   'sound-s': { id: 'sound-s', src: publicAsset('audio/sounds/s.wav') },
   'sound-a': { id: 'sound-a', src: publicAsset('audio/sounds/a.wav') },
+  'sound-t': { id: 'sound-t', src: publicAsset('audio/sounds/t.wav') },
+  'sound-r': { id: 'sound-r', src: publicAsset('audio/sounds/r.wav') },
   'welcome-instruction': {
     id: 'welcome-instruction',
     src: publicAsset('audio/lesson-1/welcome.wav'),
@@ -143,6 +145,62 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   'duck-response': {
     id: 'duck-response',
     src: publicAsset('audio/lesson-2/duck.wav'),
+  },
+  'lesson-3-welcome-instruction': {
+    id: 'lesson-3-welcome-instruction',
+    src: publicAsset('audio/lesson-3/welcome.wav'),
+  },
+  't-intro-instruction': {
+    id: 't-intro-instruction',
+    src: publicAsset('audio/lesson-3/t-intro.wav'),
+  },
+  'r-intro-instruction': {
+    id: 'r-intro-instruction',
+    src: publicAsset('audio/lesson-3/r-intro.wav'),
+  },
+  'what-sound-instruction': {
+    id: 'what-sound-instruction',
+    src: publicAsset('audio/lesson-2/a-what-sound.wav'),
+  },
+  'taco-instruction': {
+    id: 'taco-instruction',
+    src: publicAsset('audio/lesson-3/taco-t.wav'),
+  },
+  'turtle-t-instruction': {
+    id: 'turtle-t-instruction',
+    src: publicAsset('audio/lesson-3/turtle-t.wav'),
+  },
+  'rabbit-r-instruction': {
+    id: 'rabbit-r-instruction',
+    src: publicAsset('audio/lesson-3/rabbit-r.wav'),
+  },
+  'rocket-instruction': {
+    id: 'rocket-instruction',
+    src: publicAsset('audio/lesson-3/rocket-r.wav'),
+  },
+  'trace-t-instruction': {
+    id: 'trace-t-instruction',
+    src: publicAsset('audio/lesson-3/trace-t.wav'),
+  },
+  'trace-r-instruction': {
+    id: 'trace-r-instruction',
+    src: publicAsset('audio/lesson-3/trace-r.wav'),
+  },
+  'table-instruction': {
+    id: 'table-instruction',
+    src: publicAsset('audio/lesson-3/table-t.wav'),
+  },
+  'rock-instruction': {
+    id: 'rock-instruction',
+    src: publicAsset('audio/lesson-3/rock-r.wav'),
+  },
+  'tap-t-instruction': {
+    id: 'tap-t-instruction',
+    src: publicAsset('audio/prompts/tap-t.wav'),
+  },
+  'tap-r-instruction': {
+    id: 'tap-r-instruction',
+    src: publicAsset('audio/prompts/tap-r.wav'),
   },
 }
 

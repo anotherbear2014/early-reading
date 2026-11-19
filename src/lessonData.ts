@@ -8,8 +8,12 @@ import moonImage from './assets/pictures/moon.png'
 import motorcycleImage from './assets/pictures/motorcycle.png'
 import mouseImage from './assets/pictures/mouse.png'
 import rabbitImage from './assets/pictures/rabbit.png'
+import rockImage from './assets/pictures/rock.png'
+import rocketImage from './assets/pictures/rocket.png'
 import sockImage from './assets/pictures/sock.png'
 import sunImage from './assets/pictures/sun.png'
+import tableImage from './assets/pictures/table.png'
+import tacoImage from './assets/pictures/taco.png'
 import turtleImage from './assets/pictures/turtle.png'
 import type {
   LessonDefinition,
@@ -24,6 +28,8 @@ export const sounds: Record<SoundId, SoundDefinition> = {
   m: { id: 'm', display: 'm', promptSound: 'mmmmmm', audioId: 'sound-m' },
   s: { id: 's', display: 's', promptSound: 'ssssss', audioId: 'sound-s' },
   a: { id: 'a', display: 'a', promptSound: 'aaaaa', audioId: 'sound-a' },
+  t: { id: 't', display: 't', promptSound: 't', audioId: 'sound-t' },
+  r: { id: 'r', display: 'r', promptSound: 'rrrrr', audioId: 'sound-r' },
 }
 
 const targetSoundChoice = (soundId: SoundId) => ({
@@ -96,9 +102,51 @@ export const pictures: Record<string, PictureDefinition> = {
     soundId: 'a',
     audioId: 'alligator-instruction',
   },
+  taco: {
+    id: 'taco',
+    label: 'Taco',
+    image: tacoImage,
+    soundId: 't',
+    audioId: 'taco-instruction',
+  },
+  turtle: {
+    id: 'turtle',
+    label: 'Turtle',
+    image: turtleImage,
+    soundId: 't',
+    audioId: 'turtle-t-instruction',
+  },
+  rabbit: {
+    id: 'rabbit',
+    label: 'Rabbit',
+    image: rabbitImage,
+    soundId: 'r',
+    audioId: 'rabbit-r-instruction',
+  },
+  rocket: {
+    id: 'rocket',
+    label: 'Rocket',
+    image: rocketImage,
+    soundId: 'r',
+    audioId: 'rocket-instruction',
+  },
+  table: {
+    id: 'table',
+    label: 'Table',
+    image: tableImage,
+    soundId: 't',
+    audioId: 'table-instruction',
+  },
+  rock: {
+    id: 'rock',
+    label: 'Rock',
+    image: rockImage,
+    soundId: 'r',
+    audioId: 'rock-instruction',
+  },
 }
 
-const tracingDefinitions: Record<'m' | 's', TracingDefinition> = {
+const tracingDefinitions: Record<'m' | 's' | 't' | 'r', TracingDefinition> = {
   m: {
     viewBox: '0 0 680 460',
     startPoint: { x: 130, y: 75 },
@@ -132,6 +180,31 @@ const tracingDefinitions: Record<'m' | 's', TracingDefinition> = {
     touchTolerance: 82,
     completion: 'stars',
     ariaLabel: 'Trace the letter s from the upper right, around both curves, to the lower left',
+  },
+  t: {
+    viewBox: '0 0 680 460',
+    startPoint: { x: 320, y: 60 },
+    phases: [
+      { id: 'stem', path: 'M 320 60 L 320 400' },
+      { id: 'crossbar', path: 'M 205 190 L 435 190' },
+    ],
+    strokeColor: 'var(--letter-t-color)',
+    touchTolerance: 82,
+    completion: 'stars',
+    ariaLabel: 'Trace the letter t down from the top, then across from left to right',
+  },
+  r: {
+    viewBox: '0 0 680 460',
+    startPoint: { x: 245, y: 85 },
+    phases: [
+      { id: 'stem-down', path: 'M 245 85 L 245 390' },
+      { id: 'stem-up', path: 'M 245 390 L 245 150' },
+      { id: 'shoulder', path: 'M 245 150 C 290 105 380 115 420 190 C 435 220 430 250 420 270' },
+    ],
+    strokeColor: 'var(--letter-r-color)',
+    touchTolerance: 82,
+    completion: 'stars',
+    ariaLabel: 'Trace the letter r down, back up, then around the short shoulder',
   },
 }
 
@@ -396,7 +469,139 @@ export const lessonTwo: LessonDefinition = {
   ],
 }
 
-export const lessons = [lessonOne, lessonTwo]
+export const lessonThree: LessonDefinition = {
+  id: 3,
+  title: 'Lesson 3',
+  screens: [
+    {
+      id: 'lesson-3-welcome',
+      type: 'welcome',
+      title: 'Another Sound',
+      instructionAudioId: 'lesson-3-welcome-instruction',
+    },
+    {
+      id: 'lesson-3-review-m-s-a',
+      type: 'soundChoice',
+      sounds: ['m', 's', 'a'],
+      instructionAudioId: 'review-instruction',
+    },
+    {
+      id: 'introduce-t',
+      type: 'sound',
+      soundId: 't',
+      instructionAudioId: 't-intro-instruction',
+    },
+    {
+      id: 'replay-t',
+      type: 'sound',
+      soundId: 't',
+      prompt: 'What sound is this? Say the sound, then press the arrow.',
+      instructionAudioId: 'what-sound-instruction',
+    },
+    {
+      id: 'taco',
+      type: 'picture',
+      pictureId: 'taco',
+      instructionAudioId: 'taco-instruction',
+    },
+    {
+      id: 'turtle-t',
+      type: 'picture',
+      pictureId: 'turtle',
+      instructionAudioId: 'turtle-t-instruction',
+    },
+    {
+      id: 'trace-t',
+      type: 'tracing',
+      instructionAudioId: 'trace-t-instruction',
+      tracing: tracingDefinitions.t,
+    },
+    {
+      id: 'introduce-r',
+      type: 'sound',
+      soundId: 'r',
+      instructionAudioId: 'r-intro-instruction',
+    },
+    {
+      id: 'replay-r',
+      type: 'sound',
+      soundId: 'r',
+      prompt: 'What sound is this? Say the sound, then press the arrow.',
+      instructionAudioId: 'what-sound-instruction',
+    },
+    {
+      id: 'rabbit-r',
+      type: 'picture',
+      pictureId: 'rabbit',
+      instructionAudioId: 'rabbit-r-instruction',
+    },
+    {
+      id: 'rocket',
+      type: 'picture',
+      pictureId: 'rocket',
+      instructionAudioId: 'rocket-instruction',
+    },
+    {
+      id: 'trace-r',
+      type: 'tracing',
+      instructionAudioId: 'trace-r-instruction',
+      tracing: tracingDefinitions.r,
+    },
+    {
+      id: 'table',
+      type: 'picture',
+      pictureId: 'table',
+      instructionAudioId: 'table-instruction',
+    },
+    {
+      id: 'rock',
+      type: 'picture',
+      pictureId: 'rock',
+      instructionAudioId: 'rock-instruction',
+    },
+    {
+      id: 'find-r',
+      type: 'soundChoice',
+      sounds: ['m', 'r'],
+      ...targetSoundChoice('r'),
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'find-t',
+      type: 'soundChoice',
+      sounds: ['s', 't'],
+      ...targetSoundChoice('t'),
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'find-m-review',
+      type: 'soundChoice',
+      sounds: ['a', 'm', 't'],
+      ...targetSoundChoice('m'),
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'find-s-review',
+      type: 'soundChoice',
+      sounds: ['a', 'r', 's'],
+      ...targetSoundChoice('s'),
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'lesson-3-free-review',
+      type: 'soundChoice',
+      sounds: ['m', 's', 'a', 't', 'r'],
+      instructionAudioId: 'review-instruction',
+    },
+    {
+      id: 'lesson-3-celebration',
+      type: 'celebration',
+      instructionAudioId: 'celebration-instruction',
+    },
+  ],
+}
+
+export const lessons = [lessonOne, lessonTwo, lessonThree]
 
 const shuffled = <T,>(items: T[]) =>
   Math.random() < 0.5 ? [...items] : [...items].reverse()
