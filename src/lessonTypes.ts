@@ -3,6 +3,7 @@ export type SoundId = 'm' | 's' | 'a'
 export interface SoundDefinition {
   id: SoundId
   display: string
+  promptSound: string
   audioId: string
 }
 

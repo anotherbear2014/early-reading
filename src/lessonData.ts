@@ -16,14 +16,21 @@ import type {
   LessonScreen,
   PictureDefinition,
   SoundDefinition,
+  SoundId,
   TracingDefinition,
 } from './lessonTypes'
 
-export const sounds: Record<string, SoundDefinition> = {
-  m: { id: 'm', display: 'm', audioId: 'sound-m' },
-  s: { id: 's', display: 's', audioId: 'sound-s' },
-  a: { id: 'a', display: 'a', audioId: 'sound-a' },
+export const sounds: Record<SoundId, SoundDefinition> = {
+  m: { id: 'm', display: 'm', promptSound: 'mmmmmm', audioId: 'sound-m' },
+  s: { id: 's', display: 's', promptSound: 'ssssss', audioId: 'sound-s' },
+  a: { id: 'a', display: 'a', promptSound: 'aaaaa', audioId: 'sound-a' },
 }
+
+const targetSoundChoice = (soundId: SoundId) => ({
+  prompt: `Tap the ${sounds[soundId].promptSound}`,
+  requestedSoundId: soundId,
+  instructionAudioId: `tap-${soundId}-instruction`,
+})
 
 export const pictures: Record<string, PictureDefinition> = {
   moon: {
@@ -216,19 +223,15 @@ export const lessonOne: LessonDefinition = {
       id: 'find-m',
       type: 'soundChoice',
       sounds: ['m', 's'],
-      prompt: 'Tap the letter that makes the sound mmmmmm',
-      requestedSoundId: 'm',
+      ...targetSoundChoice('m'),
       randomizeOrder: true,
-      instructionAudioId: 'find-m-instruction',
     },
     {
       id: 'find-s',
       type: 'soundChoice',
       sounds: ['m', 's'],
-      prompt: 'Tap the letter that makes the sound ssssss',
-      requestedSoundId: 's',
+      ...targetSoundChoice('s'),
       randomizeOrder: true,
-      instructionAudioId: 'find-s-instruction',
     },
     {
       id: 'sound-review',
@@ -264,10 +267,8 @@ export const lessonTwo: LessonDefinition = {
       id: 'review-find-m',
       type: 'soundChoice',
       sounds: ['m', 's'],
-      prompt: 'Tap the letter that makes the sound:',
-      requestedSoundId: 'm',
+      ...targetSoundChoice('m'),
       correctFeedback: 'stars',
-      instructionAudioId: 'find-m-instruction',
     },
     {
       id: 'introduce-a',
@@ -298,19 +299,15 @@ export const lessonTwo: LessonDefinition = {
       id: 'find-a-two-choices',
       type: 'soundChoice',
       sounds: ['a', 's'],
-      prompt: 'Tap the letter that makes the sound:',
-      requestedSoundId: 'a',
+      ...targetSoundChoice('a'),
       correctFeedback: 'stars',
-      instructionAudioId: 'find-a-instruction',
     },
     {
       id: 'find-s-three-choices',
       type: 'soundChoice',
       sounds: ['m', 'a', 's'],
-      prompt: 'Tap the letter that makes the sound:',
-      requestedSoundId: 's',
+      ...targetSoundChoice('s'),
       correctFeedback: 'stars',
-      instructionAudioId: 'find-s-instruction',
     },
     {
       id: 'antelope',
@@ -328,10 +325,8 @@ export const lessonTwo: LessonDefinition = {
       id: 'mixed-find-s',
       type: 'soundChoice',
       sounds: ['m', 's', 'a'],
-      prompt: 'Tap the letter that makes the sound:',
-      requestedSoundId: 's',
+      ...targetSoundChoice('s'),
       correctFeedback: 'stars',
-      instructionAudioId: 'find-s-instruction',
     },
     {
       id: 'picture-choice-s',

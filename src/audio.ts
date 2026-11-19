@@ -64,13 +64,17 @@ export const audioLibrary: Record<string, AudioDefinition> = {
     id: 'sock-instruction',
     src: publicAsset('audio/lesson-1/sock-s.wav'),
   },
-  'find-m-instruction': {
-    id: 'find-m-instruction',
-    src: publicAsset('audio/lesson-1/find-m.wav'),
+  'tap-m-instruction': {
+    id: 'tap-m-instruction',
+    src: publicAsset('audio/prompts/tap-m.wav'),
   },
-  'find-s-instruction': {
-    id: 'find-s-instruction',
-    src: publicAsset('audio/lesson-1/find-s.wav'),
+  'tap-s-instruction': {
+    id: 'tap-s-instruction',
+    src: publicAsset('audio/prompts/tap-s.wav'),
+  },
+  'tap-a-instruction': {
+    id: 'tap-a-instruction',
+    src: publicAsset('audio/prompts/tap-a.wav'),
   },
   'review-instruction': {
     id: 'review-instruction',
@@ -107,10 +111,6 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   'alligator-instruction': {
     id: 'alligator-instruction',
     src: publicAsset('audio/lesson-2/alligator-a.wav'),
-  },
-  'find-a-instruction': {
-    id: 'find-a-instruction',
-    src: publicAsset('audio/lesson-2/find-a.wav'),
   },
   'tap-picture-s-instruction': {
     id: 'tap-picture-s-instruction',
