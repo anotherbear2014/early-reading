@@ -214,6 +214,38 @@ export const audioLibrary: Record<string, AudioDefinition> = {
     id: 'at-word',
     src: publicAsset('audio/lesson-4/at-word.wav'),
   },
+  'mat-blend': {
+    id: 'mat-blend',
+    src: publicAsset('audio/lesson-4/mat-blend.wav'),
+  },
+  'mat-word': {
+    id: 'mat-word',
+    src: publicAsset('audio/lesson-4/mat-word.wav'),
+  },
+  'sat-blend': {
+    id: 'sat-blend',
+    src: publicAsset('audio/lesson-4/sat-blend.wav'),
+  },
+  'sat-word': {
+    id: 'sat-word',
+    src: publicAsset('audio/lesson-4/sat-word.wav'),
+  },
+  'rat-blend': {
+    id: 'rat-blend',
+    src: publicAsset('audio/lesson-4/rat-blend.wav'),
+  },
+  'rat-word': {
+    id: 'rat-word',
+    src: publicAsset('audio/lesson-4/rat-word.wav'),
+  },
+  'move-the-dot-instruction': {
+    id: 'move-the-dot-instruction',
+    src: publicAsset('audio/lesson-4/move-the-dot.wav'),
+  },
+  'your-turn-say-word-instruction': {
+    id: 'your-turn-say-word-instruction',
+    src: publicAsset('audio/lesson-4/your-turn-say-word.wav'),
+  },
 }
 
 type SpeakingListener = (speaking: boolean) => void
@@ -227,6 +259,12 @@ class AudioService {
 
   get currentTimeSeconds() {
     return this.activeAudio?.currentTime ?? 0
+  }
+
+  // Interactive screens own pause/resume and release this element on unmount.
+  getPlaybackElement(audioId: string) {
+    const definition = audioLibrary[audioId]
+    return definition ? this.getAudioElement(definition.src) : null
   }
 
   preload(audioIds: string[]) {

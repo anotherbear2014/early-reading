@@ -16,6 +16,7 @@ import tableImage from './assets/pictures/table.png'
 import tacoImage from './assets/pictures/taco.png'
 import turtleImage from './assets/pictures/turtle.png'
 import type {
+  BlendScreen,
   LessonDefinition,
   LessonScreen,
   PictureDefinition,
@@ -601,6 +602,78 @@ export const lessonThree: LessonDefinition = {
   ],
 }
 
+function buildLessonFourBlend(
+  firstSound: 'm' | 's' | 'r',
+  [firstStart, aStart, tStart, spokenEnd]: [number, number, number, number],
+): BlendScreen {
+  const word = `${firstSound}at`
+  const segment = (soundId: SoundId, startSeconds: number, endSeconds: number) => ({
+    soundId,
+    startSeconds,
+    endSeconds,
+    fadeDurationSeconds: endSeconds - startSeconds,
+  })
+
+  return {
+    id: `blend-${word}`,
+    type: 'blend',
+    instructionAudioId: `${word}-blend`,
+    blend: {
+      word,
+      blendAudioId: `${word}-blend`,
+      wordAudioId: `${word}-word`,
+      pauseAfterBlendMs: 300,
+      segments: [
+        segment(firstSound, firstStart, aStart),
+        segment('a', aStart, tStart),
+        segment('t', tStart, spokenEnd),
+      ],
+    },
+  }
+}
+
+const lessonFourDemonstrations: BlendScreen[] = [
+  {
+    id: 'blend-at',
+    type: 'blend',
+    instructionAudioId: 'at-blend',
+    blend: {
+      word: 'at',
+      blendAudioId: 'at-blend',
+      wordAudioId: 'at-word',
+      pauseAfterBlendMs: 300,
+      segments: [
+        { soundId: 'a', startSeconds: 0, endSeconds: 1.16, fadeDurationSeconds: 1.16 },
+        { soundId: 't', startSeconds: 1.16, endSeconds: 'audio-end', fadeDurationSeconds: 0.14 },
+      ],
+    },
+  },
+  // Measured raw onsets, then the approximate spoken end before the recorded tail.
+  buildLessonFourBlend('m', [0.59, 1.25, 2.05, 2.36]),
+  buildLessonFourBlend('s', [0.24, 0.91, 1.73, 2.04]),
+  buildLessonFourBlend('r', [0.76, 1.54, 2.40, 2.76]),
+]
+
+function lessonFourWordSequence(demonstration: BlendScreen): LessonScreen[] {
+  const { blend } = demonstration
+  return [
+    demonstration,
+    {
+      id: `interactive-blend-${blend.word}`,
+      type: 'interactiveBlend',
+      instructionAudioId: 'move-the-dot-instruction',
+      blend,
+    },
+    {
+      id: `your-turn-${blend.word}`,
+      type: 'wordPractice',
+      prompt: 'Your turn to say the word.',
+      instructionAudioId: 'your-turn-say-word-instruction',
+      words: [blend],
+    },
+  ]
+}
+
 export const lessonFour: LessonDefinition = {
   id: 4,
   title: 'Lesson 4',
@@ -617,35 +690,23 @@ export const lessonFour: LessonDefinition = {
       sounds: ['m', 's', 'a', 't', 'r'],
       instructionAudioId: 'review-instruction',
     },
+    ...lessonFourDemonstrations.flatMap(lessonFourWordSequence),
     {
-      id: 'blend-at',
-      type: 'blend',
-      instructionAudioId: 'at-blend',
-      blend: {
-        word: 'at',
-        blendAudioId: 'at-blend',
-        wordAudioId: 'at-word',
-        pauseAfterBlendMs: 300,
-        segments: [
-          {
-            soundId: 'a',
-            startSeconds: 0,
-            endSeconds: 1.16,
-            fadeDurationSeconds: 1.16,
-          },
-          {
-            soundId: 't',
-            startSeconds: 1.16,
-            endSeconds: 'audio-end',
-            fadeDurationSeconds: 0.14,
-          },
-        ],
-      },
+      id: 'lesson-4-word-review',
+      type: 'wordPractice',
+      prompt: 'Tap a word.',
+      words: lessonFourDemonstrations.map(({ blend }) => blend),
+    },
+    {
+      id: 'lesson-4-celebration',
+      type: 'celebration',
+      instructionAudioId: 'celebration-instruction',
     },
   ],
 }
 
 export const lessons = [lessonOne, lessonTwo, lessonThree, lessonFour]
+  .sort((first, second) => first.id - second.id)
 
 const shuffled = <T,>(items: T[]) =>
   Math.random() < 0.5 ? [...items] : [...items].reverse()

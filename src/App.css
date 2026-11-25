@@ -17,23 +17,28 @@ button {
 }
 
 .home-screen {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  overflow-y: auto;
   padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right))
     max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
   box-sizing: border-box;
 }
 
 .home-card {
-  width: min(520px, 82vw);
+  width: min(920px, 100%);
+  margin: auto;
+  flex: none;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .lesson-list {
-  width: min(420px, 80vw);
+  width: 100%;
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -60,14 +65,16 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 30px 20px 38px;
+  gap: 10px;
+  padding: 20px clamp(14px, 2.5vw, 30px) 20px clamp(16px, 3vw, 38px);
   border: 0;
   border-radius: 32px;
   background: #7559b8;
   color: white;
   box-shadow: 0 10px 0 #60469f, 0 18px 35px rgba(77, 53, 127, 0.18);
-  font-size: clamp(30px, 4vw, 42px);
+  font-size: clamp(28px, 3.6vw, 40px);
   font-weight: 750;
+  text-align: left;
   cursor: pointer;
 }
 
@@ -513,6 +520,32 @@ button {
 .blend-glyph--t { color: var(--letter-t-color); }
 .blend-glyph--r { color: var(--letter-r-color); }
 
+.word-practice-button {
+  padding: 0 0.12em;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(90px, min(36vh, 52vw), 320px);
+  font-weight: 680;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.word-practice-button:active {
+  transform: scale(0.96);
+}
+
+.word-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(12px, 3vh, 24px) clamp(16px, 5vw, 55px);
+}
+
+.word-review-grid .word-practice-button {
+  font-size: clamp(54px, min(18vh, 22vw), 148px);
+}
+
 .blend-letter-hit-regions {
   position: absolute;
   inset: 0;
@@ -540,9 +573,9 @@ button {
   padding: 17px;
   border: 0;
   border-radius: 50%;
-  background: #000;
+  background: var(--letter-s-color);
   color: #fff;
-  box-shadow: 0 5px 0 #2d2d2d, 0 9px 18px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 5px 0 #8f2452, 0 9px 18px rgba(143, 36, 82, 0.16);
   cursor: pointer;
 }
 
@@ -554,7 +587,59 @@ button {
 
 .blend-replay-control:active {
   transform: translateY(3px);
-  box-shadow: 0 2px 0 #2d2d2d, 0 6px 12px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 2px 0 #8f2452, 0 6px 12px rgba(143, 36, 82, 0.14);
+}
+
+.interactive-blend-screen {
+  --blend-dot-size: 38px;
+  --blend-dot-touch-size: 76px;
+  --blend-track-gap: 12px;
+}
+
+.interactive-blend-track {
+  position: relative;
+  height: var(--blend-dot-touch-size);
+  margin-top: var(--blend-track-gap);
+  touch-action: none;
+}
+
+.interactive-blend-track::before {
+  content: '';
+  position: absolute;
+  inset: calc(50% - 3px) 0 auto;
+  height: 6px;
+  border-radius: 999px;
+  background: #c6becd;
+}
+
+.interactive-blend-dot {
+  position: absolute;
+  top: 50%;
+  width: var(--blend-dot-touch-size);
+  height: var(--blend-dot-touch-size);
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.interactive-blend-dot::before {
+  content: '';
+  width: var(--blend-dot-size);
+  height: var(--blend-dot-size);
+  border-radius: 50%;
+  background: #000;
+}
+
+.interactive-blend-dot:active {
+  cursor: grabbing;
+}
+
+.interactive-blend-dot:focus-visible::before {
+  outline: 4px solid #3f9fa6;
+  outline-offset: 4px;
 }
 
 @keyframes tracing-star-pop {
@@ -763,6 +848,15 @@ button:focus-visible {
   .choice-content { width: 72vw; gap: 20px; }
   .tracing-screen { width: min(900px, 88vw); height: min(540px, 60vh); }
   .finish-actions { left: 50%; right: auto; transform: translateX(-50%); white-space: nowrap; }
+}
+
+@media (max-width: 759px) {
+  .lesson-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 499px) {
+  .home-card { width: min(420px, 100%); }
+  .lesson-list { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -99,6 +99,19 @@ export interface BlendScreen extends BaseScreen {
   blend: BlendDefinition
 }
 
+export interface InteractiveBlendScreen extends BaseScreen {
+  type: 'interactiveBlend'
+  blend: BlendDefinition
+}
+
+export interface WordPracticeScreen {
+  id: string
+  type: 'wordPractice'
+  instructionAudioId?: string
+  prompt: string
+  words: Pick<BlendDefinition, 'word' | 'wordAudioId' | 'segments'>[]
+}
+
 export interface CelebrationScreen extends BaseScreen {
   type: 'celebration'
 }
@@ -111,6 +124,8 @@ export type LessonScreen =
   | PictureChoiceScreen
   | TracingScreen
   | BlendScreen
+  | InteractiveBlendScreen
+  | WordPracticeScreen
   | CelebrationScreen
 
 export interface LessonDefinition {

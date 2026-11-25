@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { audioService } from './audio'
 import unicornImage from './assets/unicorn.png'
 import { BlendScreen } from './components/BlendScreen'
+import { InteractiveBlendScreen } from './components/InteractiveBlendScreen'
 import { LetterTracing } from './components/LetterTracing'
 import { UnicornInstructor } from './components/UnicornInstructor'
 import { createLessonRun, lessons, pictures, sounds } from './lessonData'
@@ -161,6 +162,42 @@ function ScreenContent({
     )
   }
 
+  if (screen.type === 'interactiveBlend') {
+    return (
+      <InteractiveBlendScreen
+        definition={screen.blend}
+        instructionAudioId={screen.instructionAudioId}
+        instructionReplayToken={blendReplayToken}
+        onSpeakingChange={onSpeakingChange}
+      />
+    )
+  }
+
+  if (screen.type === 'wordPractice') {
+    return (
+      <div className="choice-screen">
+        <h2 className="choice-prompt">{screen.prompt}</h2>
+        <div className={screen.words.length > 1 ? 'word-review-grid' : undefined}>
+          {screen.words.map(({ word, wordAudioId, segments }) => (
+            <button
+              className="word-practice-button"
+              type="button"
+              aria-label={`Hear ${word}`}
+              key={word}
+              onClick={() => void audioService.play(wordAudioId)}
+            >
+              {segments.map(({ soundId }, index) => (
+                <span className={`blend-glyph--${soundId}`} key={`${soundId}-${index}`}>
+                  {soundId}
+                </span>
+              ))}
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="celebration-content" aria-label="Lesson complete">
       <div className="celebration-stars" aria-hidden="true">
@@ -210,21 +247,23 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [blendReplayToken, setBlendReplayToken] = useState(0)
   const screen = screens[screenIndex]
+  const { instructionAudioId } = screen
   const isCelebration = screen.type === 'celebration'
-  const nextEnabled = readyScreenId === screen.id
+  const nextEnabled = readyScreenId === screen.id ||
+    screen.type === 'interactiveBlend' || screen.type === 'wordPractice'
   const showLessonNavigation = nextEnabled && !isCelebration
 
   const playInstruction = useCallback(() => {
-    return audioService.play(screen.instructionAudioId, setIsSpeaking)
-  }, [screen.instructionAudioId])
+    if (instructionAudioId) return audioService.play(instructionAudioId, setIsSpeaking)
+  }, [instructionAudioId])
 
   useEffect(() => {
-    if (screen.type === 'blend') return
+    if (screen.type === 'blend' || screen.type === 'interactiveBlend') return
 
     let active = true
     let fallbackTimer = 0
 
-    void playInstruction().then((result) => {
+    void playInstruction()?.then((result) => {
       if (!active) return
       if (result === 'ended') {
         setReadyScreenId(screen.id)
@@ -269,7 +308,7 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
   }
 
   const repeatInstruction = () => {
-    if (screen.type === 'blend') {
+    if (screen.type === 'blend' || screen.type === 'interactiveBlend') {
       setBlendReplayToken((token) => token + 1)
       return
     }
@@ -297,19 +336,21 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
         />
       </div>
 
-      <button
-        className={`instructor-control${isSpeaking ? ' is-speaking' : ''}`}
-        type="button"
-        onClick={repeatInstruction}
-        aria-label="Hear the instruction again"
-      >
-        <UnicornInstructor />
-        <span className="sound-waves" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </span>
-      </button>
+      {instructionAudioId && (
+        <button
+          className={`instructor-control${isSpeaking ? ' is-speaking' : ''}`}
+          type="button"
+          onClick={repeatInstruction}
+          aria-label="Hear the instruction again"
+        >
+          <UnicornInstructor />
+          <span className="sound-waves" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+        </button>
+      )}
 
       {showLessonNavigation && (
         <>
@@ -368,8 +409,11 @@ function App() {
 
   const startLesson = (lesson: LessonDefinition) => {
     const responseAudioIds = lesson.screens.flatMap((screen) => {
-      if (screen.type === 'blend') {
+      if (screen.type === 'blend' || screen.type === 'interactiveBlend') {
         return [screen.blend.blendAudioId, screen.blend.wordAudioId]
+      }
+      if (screen.type === 'wordPractice') {
+        return screen.words.map((word) => word.wordAudioId)
       }
       if (screen.type === 'pictureChoice') {
         return screen.choices.map((choice) => choice.responseAudioId)
@@ -381,7 +425,7 @@ function App() {
     })
     const audioIds = [
       ...Object.values(sounds).map((sound) => sound.audioId),
-      ...lesson.screens.map((screen) => screen.instructionAudioId),
+      ...lesson.screens.flatMap(({ instructionAudioId }) => instructionAudioId ? [instructionAudioId] : []),
       ...responseAudioIds,
     ]
     audioService.preload([...new Set(audioIds)])
