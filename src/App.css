@@ -88,6 +88,79 @@ button {
   box-shadow: 0 5px 0 #60469f, 0 12px 24px rgba(77, 53, 127, 0.16);
 }
 
+.build-diagnostics {
+  flex: none;
+  align-self: center;
+  max-width: 100%;
+  margin-top: 16px;
+  color: #6e657a;
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.build-diagnostics__trigger,
+.build-diagnostics__actions button {
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+}
+
+.build-diagnostics button:focus-visible {
+  outline: 2px solid #7559b8;
+  outline-offset: 2px;
+}
+
+.build-diagnostics__panel {
+  width: min(32rem, 100%);
+  padding: 14px;
+  border: 1px solid #e7dff0;
+  border-radius: 14px;
+  background: #fffdfb;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.build-diagnostics__panel dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 6px 12px;
+  margin: 0;
+}
+
+.build-diagnostics__panel dd {
+  margin: 0;
+  color: #3c3450;
+}
+
+.build-diagnostics__status {
+  margin: 12px 0 6px;
+  font-weight: 650;
+}
+
+.build-diagnostics__status span {
+  display: block;
+  font-weight: normal;
+}
+
+.build-diagnostics__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.build-diagnostics__actions button {
+  border-color: #e7dff0;
+}
+
+.build-diagnostics__actions button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
 .lesson-screen {
   --instruction-text-color: #111;
   --letter-m-color: #6842a8;

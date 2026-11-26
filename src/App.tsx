@@ -2,11 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { audioService } from './audio'
 import unicornImage from './assets/unicorn.png'
 import { BlendScreen } from './components/BlendScreen'
+import { BuildDiagnostics } from './components/BuildDiagnostics'
 import { InteractiveBlendScreen } from './components/InteractiveBlendScreen'
 import { LetterTracing } from './components/LetterTracing'
 import { UnicornInstructor } from './components/UnicornInstructor'
 import { createLessonRun, lessons, pictures, sounds } from './lessonData'
 import type { LessonDefinition, LessonScreen, SoundId } from './lessonTypes'
+import { beginLesson, setLessonSelectionVisible } from './pwaUpdate'
 import './App.css'
 
 interface SoundButtonProps {
@@ -234,6 +236,7 @@ function HomeScreen({ onStart }: { onStart: (lesson: LessonDefinition) => void }
           ))}
         </div>
       </div>
+      <BuildDiagnostics />
     </main>
   )
 }
@@ -411,7 +414,12 @@ function App() {
     screens: LessonScreen[]
   } | null>(null)
 
+  useEffect(() => {
+    setLessonSelectionVisible(lessonRun === null)
+  }, [lessonRun])
+
   const startLesson = (lesson: LessonDefinition) => {
+    if (!beginLesson()) return
     const responseAudioIds = lesson.screens.flatMap((screen) => {
       if (screen.type === 'blend' || screen.type === 'interactiveBlend') {
         return [screen.blend.blendAudioId, screen.blend.wordAudioId]
