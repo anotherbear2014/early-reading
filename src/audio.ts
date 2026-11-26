@@ -250,6 +250,10 @@ export const audioLibrary: Record<string, AudioDefinition> = {
 
 type SpeakingListener = (speaking: boolean) => void
 
+interface PlaybackOptions {
+  stallTimeoutMs?: number
+}
+
 class AudioService {
   private readonly audioElements = new Map<string, HTMLAudioElement>()
   private activeAudio: HTMLAudioElement | null = null
@@ -282,9 +286,10 @@ class AudioService {
   }
 
   stop() {
-    if (this.activeAudio) {
-      this.activeAudio.pause()
-      this.activeAudio.currentTime = 0
+    const audio = this.activeAudio
+    if (audio) {
+      audio.pause()
+      audio.currentTime = 0
     }
 
     this.activeCompletion?.('error')
@@ -295,7 +300,11 @@ class AudioService {
     this.activeListener = null
   }
 
-  async play(audioId: string, listener?: SpeakingListener): Promise<PlaybackResult> {
+  async play(
+    audioId: string,
+    listener?: SpeakingListener,
+    options?: PlaybackOptions,
+  ): Promise<PlaybackResult> {
     const definition = audioLibrary[audioId]
     if (!definition) {
       console.error(`[audio] Cannot play unknown audio ID "${audioId}".`)
@@ -307,7 +316,7 @@ class AudioService {
     this.activeListener = listener ?? null
     listener?.(true)
 
-    return this.playFile(audioId, definition.src, playbackNumber)
+    return this.playFile(audioId, definition.src, playbackNumber, options?.stallTimeoutMs)
   }
 
   private getAudioElement(src: string) {
@@ -324,16 +333,27 @@ class AudioService {
     audioId: string,
     src: string,
     playbackNumber: number,
+    stallTimeoutMs?: number,
   ): Promise<PlaybackResult> {
     return new Promise((resolve) => {
       let settled = false
+      let stallTimer: ReturnType<typeof setTimeout> | undefined
       const audio = this.getAudioElement(src)
       audio.currentTime = 0
       this.activeAudio = audio
+      let lastTime = audio.currentTime
 
       const finish = (result: PlaybackResult) => {
         if (settled || playbackNumber !== this.playbackNumber) return
         settled = true
+        audio.onended = null
+        audio.onerror = null
+        if (stallTimeoutMs !== undefined) {
+          clearTimeout(stallTimer)
+          audio.removeEventListener('timeupdate', noteProgress)
+          audio.removeEventListener('pause', handlePause)
+          if (result !== 'ended' && !audio.paused) audio.pause()
+        }
         this.activeCompletion = null
         this.activeAudio = null
         this.activeListener?.(false)
@@ -341,8 +361,27 @@ class AudioService {
         resolve(result)
       }
 
-      audio.onended = () => finish('ended')
+      // The cached element can still have events queued from a previous run.
+      const handlePause = () => {
+        if (audio.paused) finish(audio.ended ? 'ended' : 'error')
+      }
+      const armStallTimer = () => {
+        clearTimeout(stallTimer)
+        stallTimer = setTimeout(() => {
+          finish(audio.ended ? 'ended' : 'error')
+        }, stallTimeoutMs)
+      }
+      const noteProgress = () => {
+        if (audio.currentTime <= lastTime) return
+        lastTime = audio.currentTime
+        armStallTimer()
+      }
+
+      audio.onended = () => {
+        if (stallTimeoutMs === undefined || audio.ended) finish('ended')
+      }
       audio.onerror = () => {
+        if (stallTimeoutMs !== undefined && !audio.error) return
         console.error(
           `[audio] Failed to load production audio "${audioId}" from "${src}" ` +
             `(networkState: ${audio.networkState}, readyState: ${audio.readyState}).`,
@@ -350,13 +389,24 @@ class AudioService {
         finish('error')
       }
       this.activeCompletion = finish
-      audio.play().catch((error: unknown) => {
+      if (stallTimeoutMs !== undefined) {
+        audio.addEventListener('timeupdate', noteProgress)
+        audio.addEventListener('pause', handlePause)
+        armStallTimer()
+      }
+      const handlePlayError = (error: unknown) => {
+        if (settled || playbackNumber !== this.playbackNumber) return
         console.error(
           `[audio] Failed to play production audio "${audioId}" from "${src}".`,
           error,
         )
         finish('error')
-      })
+      }
+      try {
+        void audio.play().catch(handlePlayError)
+      } catch (error) {
+        handlePlayError(error)
+      }
     })
   }
 }

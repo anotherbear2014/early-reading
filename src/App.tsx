@@ -48,6 +48,7 @@ function ChoiceStars({ animationKey }: { animationKey: number }) {
 interface ScreenContentProps {
   screen: LessonScreen
   blendReplayToken: number
+  onBlendReplay: () => void
   onBlendComplete: () => void
   onSpeakingChange: (speaking: boolean) => void
 }
@@ -55,6 +56,7 @@ interface ScreenContentProps {
 function ScreenContent({
   screen,
   blendReplayToken,
+  onBlendReplay,
   onBlendComplete,
   onSpeakingChange,
 }: ScreenContentProps) {
@@ -156,6 +158,7 @@ function ScreenContent({
       <BlendScreen
         definition={screen.blend}
         replayToken={blendReplayToken}
+        onReplay={onBlendReplay}
         onDemonstrationComplete={onBlendComplete}
         onSpeakingChange={onSpeakingChange}
       />
@@ -331,6 +334,7 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
         <ScreenContent
           screen={screen}
           blendReplayToken={blendReplayToken}
+          onBlendReplay={repeatInstruction}
           onBlendComplete={handleBlendComplete}
           onSpeakingChange={setIsSpeaking}
         />

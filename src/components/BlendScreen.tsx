@@ -5,6 +5,7 @@ import type { BlendDefinition } from '../lessonTypes'
 interface BlendScreenProps {
   definition: BlendDefinition
   replayToken: number
+  onReplay: () => void
   onDemonstrationComplete: () => void
   onSpeakingChange: (speaking: boolean) => void
 }
@@ -13,25 +14,25 @@ interface WordGeometry {
   boundaries: number[]
 }
 
-const wait = (milliseconds: number, onTimer: (timer: number) => void) =>
-  new Promise<void>((resolve) => {
-    onTimer(window.setTimeout(resolve, milliseconds))
-  })
+const audioStallTimeoutMs = 4000
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value))
 
 export function BlendScreen({
   definition,
   replayToken,
+  onReplay,
   onDemonstrationComplete,
   onSpeakingChange,
 }: BlendScreenProps) {
   const inactiveWordRef = useRef<HTMLDivElement>(null)
   const glyphRefs = useRef<Array<HTMLSpanElement | null>>([])
+  const geometryRef = useRef<WordGeometry | null>(null)
+  const cancelRunRef = useRef<(() => void) | null>(null)
   const [wordGeometry, setWordGeometry] = useState<WordGeometry | null>(null)
   const [revealProgress, setRevealProgress] = useState(0)
-  const [isComplete, setIsComplete] = useState(false)
-  const [replayButtonToken, setReplayButtonToken] = useState(0)
+  const [completedReplayToken, setCompletedReplayToken] = useState<number | null>(null)
+  const isComplete = completedReplayToken === replayToken
 
   useLayoutEffect(() => {
     const measureWord = () => {
@@ -51,7 +52,9 @@ export function BlendScreen({
         (lastGlyphBounds.right - wordBounds.left) / wordBounds.width,
       )
 
-      setWordGeometry({ boundaries: [...starts, wordEnd] })
+      const geometry = { boundaries: [...starts, wordEnd] }
+      geometryRef.current = geometry
+      setWordGeometry(geometry)
     }
 
     measureWord()
@@ -59,15 +62,17 @@ export function BlendScreen({
     return () => window.removeEventListener('resize', measureWord)
   }, [definition])
 
-  useEffect(() => {
-    if (!wordGeometry) return
+  // Invalidate the previous run during the replay commit, before passive effects.
+  useLayoutEffect(() => () => cancelRunRef.current?.(), [definition, replayToken])
 
+  useEffect(() => {
     let active = true
     let animationFrame = 0
     let pauseTimer = 0
 
     const revealAtTime = (elapsed: number) => {
-      const { boundaries } = wordGeometry
+      const boundaries = geometryRef.current?.boundaries
+      if (!boundaries) return 0
 
       for (let index = definition.segments.length - 1; index >= 0; index -= 1) {
         const segment = definition.segments[index]
@@ -86,51 +91,60 @@ export function BlendScreen({
     }
 
     const updateReveal = () => {
+      if (!active) return
       setRevealProgress(revealAtTime(audioService.currentTimeSeconds))
       animationFrame = window.requestAnimationFrame(updateReveal)
     }
 
+    const playClip = async (id: string) => {
+      try {
+        await audioService.play(id, undefined, { stallTimeoutMs: audioStallTimeoutMs })
+      } catch (error) {
+        if (active) console.error('[audio] Could not play the blending demonstration.', error)
+      }
+    }
+
+    const playNormalWord = async () => {
+      await playClip(definition.wordAudioId)
+      if (!active) return
+      setCompletedReplayToken(replayToken)
+      onSpeakingChange(false)
+      onDemonstrationComplete()
+    }
+
     const demonstrate = async () => {
-      setIsComplete(false)
       setRevealProgress(0)
       onSpeakingChange(true)
 
-      const blendPlayback = audioService.play(definition.blendAudioId)
+      const blendPlayback = playClip(definition.blendAudioId)
       animationFrame = window.requestAnimationFrame(updateReveal)
       await blendPlayback
       window.cancelAnimationFrame(animationFrame)
       if (!active) return
 
       setRevealProgress(1)
-      await wait(definition.pauseAfterBlendMs, (timer) => {
-        pauseTimer = timer
-      })
-      if (!active) return
-
-      await audioService.play(definition.wordAudioId)
-      if (!active) return
-
-      setIsComplete(true)
-      onSpeakingChange(false)
-      onDemonstrationComplete()
+      pauseTimer = window.setTimeout(() => {
+        if (active) void playNormalWord()
+      }, definition.pauseAfterBlendMs)
     }
 
-    void demonstrate()
-
-    return () => {
+    const cancel = () => {
+      if (!active) return
       active = false
       window.cancelAnimationFrame(animationFrame)
       window.clearTimeout(pauseTimer)
       audioService.stop()
       onSpeakingChange(false)
     }
+    cancelRunRef.current = cancel
+    void demonstrate()
+
+    return cancel
   }, [
     definition,
     onDemonstrationComplete,
     onSpeakingChange,
-    replayButtonToken,
     replayToken,
-    wordGeometry,
   ])
 
   const playWord = () => {
@@ -209,7 +223,7 @@ export function BlendScreen({
                     }}
                     onClick={(event) => {
                       event.stopPropagation()
-                      void audioService.play(`sound-${segment.soundId}`)
+                      if (isComplete) void audioService.play(`sound-${segment.soundId}`)
                     }}
                     key={`${segment.soundId}-${index}`}
                   />
@@ -222,7 +236,7 @@ export function BlendScreen({
           className="blend-replay-control"
           type="button"
           aria-label={`Replay the ${definition.word} blend`}
-          onClick={() => setReplayButtonToken((token) => token + 1)}
+          onClick={onReplay}
         >
           <svg viewBox="0 0 48 48" aria-hidden="true">
             <path d="M38 16V7l-5 5a17 17 0 1 0 5 21l-6-3a10 10 0 1 1-2-13l-6 6h14Z" />
