@@ -30,3 +30,12 @@ If you are developing a production application, we recommend enabling type-aware
 ```
 
 See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+
+## Curriculum sequencing
+
+During the initial introduction and early practice of `n`, avoid directly contrasting
+`m` and `n` in discrimination activities. In letter-choice activities, avoid offering
+one as a distractor when the child hears the other. In initial-sound picture choices,
+avoid `n`-initial distractors for an /m/ target and `m`-initial distractors for an /n/
+target. Keep both letters available in free review once introduced. Revisit direct
+/m/ and /n/ discrimination later in the curriculum.

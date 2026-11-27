@@ -4,9 +4,16 @@ import antelopeImage from './assets/pictures/antelope.png'
 import appleImage from './assets/pictures/apple.png'
 import basketballImage from './assets/pictures/basketball.png'
 import duckImage from './assets/pictures/duck.png'
+import iglooImage from './assets/pictures/igloo.png'
+import iguanaImage from './assets/pictures/iguana.png'
+import inchwormImage from './assets/pictures/inchworm.png'
+import italyImage from './assets/pictures/italy.png'
 import moonImage from './assets/pictures/moon.png'
 import motorcycleImage from './assets/pictures/motorcycle.png'
 import mouseImage from './assets/pictures/mouse.png'
+import necklaceImage from './assets/pictures/necklace.png'
+import nestImage from './assets/pictures/nest.png'
+import noseImage from './assets/pictures/nose.png'
 import rabbitImage from './assets/pictures/rabbit.png'
 import rockImage from './assets/pictures/rock.png'
 import rocketImage from './assets/pictures/rocket.png'
@@ -31,12 +38,19 @@ export const sounds: Record<SoundId, SoundDefinition> = {
   a: { id: 'a', display: 'a', promptSound: 'aaaaa', audioId: 'sound-a' },
   t: { id: 't', display: 't', promptSound: 't', audioId: 'sound-t' },
   r: { id: 'r', display: 'r', promptSound: 'rrrrr', audioId: 'sound-r' },
+  i: { id: 'i', display: 'i', promptSound: 'iiiii', audioId: 'sound-i' },
+  n: { id: 'n', display: 'n', promptSound: 'nnnnn', audioId: 'sound-n' },
 }
 
 const targetSoundChoice = (soundId: SoundId) => ({
   prompt: `Tap the ${sounds[soundId].promptSound}`,
   requestedSoundId: soundId,
   instructionAudioId: `tap-${soundId}-instruction`,
+})
+
+const targetPictureChoice = (soundId: SoundId) => ({
+  requestedSoundId: soundId,
+  instructionAudioId: `tap-picture-${soundId}-instruction`,
 })
 
 export const pictures: Record<string, PictureDefinition> = {
@@ -145,9 +159,58 @@ export const pictures: Record<string, PictureDefinition> = {
     soundId: 'r',
     audioId: 'rock-instruction',
   },
+  igloo: {
+    id: 'igloo',
+    label: 'Igloo',
+    image: iglooImage,
+    soundId: 'i',
+    audioId: 'igloo-i-instruction',
+  },
+  iguana: {
+    id: 'iguana',
+    label: 'Iguana',
+    image: iguanaImage,
+    soundId: 'i',
+    audioId: 'iguana-i-instruction',
+  },
+  italy: {
+    id: 'italy',
+    label: 'Italy',
+    image: italyImage,
+    soundId: 'i',
+    audioId: 'italy-i-instruction',
+  },
+  inchworm: {
+    id: 'inchworm',
+    label: 'Inchworm',
+    image: inchwormImage,
+    soundId: 'i',
+    audioId: 'inchworm-i-instruction',
+  },
+  nose: {
+    id: 'nose',
+    label: 'Nose',
+    image: noseImage,
+    soundId: 'n',
+    audioId: 'nose-n-instruction',
+  },
+  nest: {
+    id: 'nest',
+    label: 'Nest',
+    image: nestImage,
+    soundId: 'n',
+    audioId: 'nest-n-instruction',
+  },
+  necklace: {
+    id: 'necklace',
+    label: 'Necklace',
+    image: necklaceImage,
+    soundId: 'n',
+    audioId: 'necklace-n-instruction',
+  },
 }
 
-const tracingDefinitions: Record<'m' | 's' | 't' | 'r', TracingDefinition> = {
+const tracingDefinitions: Record<'m' | 's' | 't' | 'r' | 'i' | 'n', TracingDefinition> = {
   m: {
     viewBox: '0 0 680 460',
     startPoint: { x: 130, y: 75 },
@@ -206,6 +269,34 @@ const tracingDefinitions: Record<'m' | 's' | 't' | 'r', TracingDefinition> = {
     touchTolerance: 82,
     completion: 'stars',
     ariaLabel: 'Trace the letter r down, back up, then around the short shoulder',
+  },
+  i: {
+    viewBox: '0 0 680 460',
+    startPoint: { x: 340, y: 150 },
+    phases: [
+      { id: 'stem', path: 'M 340 150 L 340 390' },
+      { id: 'dot', path: 'M 340 75 L 340 77' },
+    ],
+    strokeColor: 'var(--letter-i-color)',
+    touchTolerance: 92,
+    completion: 'stars',
+    ariaLabel: 'Trace the letter i down from the top, then tap the dot',
+  },
+  n: {
+    viewBox: '0 0 680 460',
+    startPoint: { x: 230, y: 90 },
+    phases: [
+      { id: 'stem-down', path: 'M 230 90 L 230 390' },
+      { id: 'stem-up', path: 'M 230 390 L 230 150' },
+      {
+        id: 'arch',
+        path: 'M 230 150 C 290 98 425 105 440 225 C 447 285 440 342 440 390',
+      },
+    ],
+    strokeColor: 'var(--letter-n-color)',
+    touchTolerance: 92,
+    completion: 'stars',
+    ariaLabel: 'Trace the letter n down, back up, then over and down the arch',
   },
 }
 
@@ -405,8 +496,7 @@ export const lessonTwo: LessonDefinition = {
     {
       id: 'picture-choice-s',
       type: 'pictureChoice',
-      prompt: 'Tap the picture that begins with the letter s.',
-      instructionAudioId: 'tap-picture-s-instruction',
+      ...targetPictureChoice('s'),
       choices: [
         {
           id: 'turtle',
@@ -432,8 +522,7 @@ export const lessonTwo: LessonDefinition = {
     {
       id: 'picture-choice-m',
       type: 'pictureChoice',
-      prompt: 'Tap the picture that begins with the letter m.',
-      instructionAudioId: 'tap-picture-m-instruction',
+      ...targetPictureChoice('m'),
       choices: [
         {
           id: 'mouse',
@@ -705,7 +794,204 @@ export const lessonFour: LessonDefinition = {
   ],
 }
 
-export const lessons = [lessonOne, lessonTwo, lessonThree, lessonFour]
+export const lessonFive: LessonDefinition = {
+  id: 5,
+  title: 'Lesson 5',
+  screens: [
+    {
+      id: 'lesson-5-welcome',
+      type: 'welcome',
+      title: 'Another Sound',
+      instructionAudioId: 'lesson-5-welcome-instruction',
+    },
+    {
+      id: 'lesson-5-opening-review',
+      type: 'soundChoice',
+      sounds: ['m', 's', 'a', 't', 'r'],
+      instructionAudioId: 'lesson-5-review-instruction',
+    },
+    {
+      id: 'introduce-i',
+      type: 'sound',
+      soundId: 'i',
+      instructionAudioId: 'i-intro-instruction',
+    },
+    {
+      id: 'replay-i',
+      type: 'sound',
+      soundId: 'i',
+      prompt: 'What sound is this? Say the sound then press the arrow.',
+      instructionAudioId: 'lesson-5-what-sound-instruction',
+    },
+    {
+      id: 'igloo',
+      type: 'picture',
+      pictureId: 'igloo',
+      instructionAudioId: 'igloo-i-instruction',
+    },
+    {
+      id: 'iguana',
+      type: 'picture',
+      pictureId: 'iguana',
+      instructionAudioId: 'iguana-i-instruction',
+    },
+    {
+      id: 'italy',
+      type: 'picture',
+      pictureId: 'italy',
+      instructionAudioId: 'italy-i-instruction',
+    },
+    {
+      id: 'inchworm',
+      type: 'picture',
+      pictureId: 'inchworm',
+      instructionAudioId: 'inchworm-i-instruction',
+    },
+    {
+      id: 'trace-i',
+      type: 'tracing',
+      instructionAudioId: 'trace-i-instruction',
+      tracing: tracingDefinitions.i,
+    },
+    {
+      id: 'introduce-n',
+      type: 'sound',
+      soundId: 'n',
+      instructionAudioId: 'n-intro-instruction',
+    },
+    {
+      id: 'replay-n',
+      type: 'sound',
+      soundId: 'n',
+      prompt: 'What sound is this? Say the sound then press the arrow.',
+      instructionAudioId: 'lesson-5-what-sound-instruction',
+    },
+    {
+      id: 'nose',
+      type: 'picture',
+      pictureId: 'nose',
+      instructionAudioId: 'nose-n-instruction',
+    },
+    {
+      id: 'nest',
+      type: 'picture',
+      pictureId: 'nest',
+      instructionAudioId: 'nest-n-instruction',
+    },
+    {
+      id: 'necklace',
+      type: 'picture',
+      pictureId: 'necklace',
+      instructionAudioId: 'necklace-n-instruction',
+    },
+    {
+      id: 'no',
+      type: 'wordAssociation',
+      word: 'no',
+      soundId: 'n',
+      instructionAudioId: 'no-n-instruction',
+    },
+    {
+      id: 'trace-n',
+      type: 'tracing',
+      instructionAudioId: 'trace-n-instruction',
+      tracing: tracingDefinitions.n,
+    },
+    {
+      id: 'find-n',
+      type: 'soundChoice',
+      sounds: ['t', 'n'],
+      ...targetSoundChoice('n'),
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'find-i',
+      type: 'soundChoice',
+      sounds: ['i', 'a'],
+      ...targetSoundChoice('i'),
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'find-r-lesson-5',
+      type: 'soundChoice',
+      sounds: ['n', 'a', 'r'],
+      ...targetSoundChoice('r'),
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'find-t-lesson-5',
+      type: 'soundChoice',
+      sounds: ['t', 'i', 's'],
+      ...targetSoundChoice('t'),
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'picture-choice-i',
+      type: 'pictureChoice',
+      ...targetPictureChoice('i'),
+      choices: [
+        {
+          id: 'turtle',
+          label: 'Turtle',
+          image: turtleImage,
+          responseAudioId: 'turtle-response',
+        },
+        {
+          id: 'igloo',
+          label: 'Igloo',
+          image: iglooImage,
+          responseAudioId: 'igloo-correct-response',
+          correct: true,
+        },
+        {
+          id: 'duck',
+          label: 'Duck',
+          image: duckImage,
+          responseAudioId: 'duck-response',
+        },
+      ],
+    },
+    {
+      id: 'picture-choice-n',
+      type: 'pictureChoice',
+      ...targetPictureChoice('n'),
+      choices: [
+        {
+          id: 'nose',
+          label: 'Nose',
+          image: noseImage,
+          responseAudioId: 'nose-correct-response',
+          correct: true,
+        },
+        {
+          id: 'rabbit',
+          label: 'Rabbit',
+          image: rabbitImage,
+          responseAudioId: 'rabbit-response',
+        },
+        {
+          id: 'duck',
+          label: 'Duck',
+          image: duckImage,
+          responseAudioId: 'duck-response',
+        },
+      ],
+    },
+    {
+      id: 'lesson-5-free-review',
+      type: 'soundChoice',
+      sounds: ['m', 's', 'a', 't', 'r', 'i', 'n'],
+      instructionAudioId: 'lesson-5-review-instruction',
+    },
+    {
+      id: 'lesson-5-celebration',
+      type: 'celebration',
+      instructionAudioId: 'lesson-5-celebration-instruction',
+    },
+  ],
+}
+
+export const lessons = [lessonOne, lessonTwo, lessonThree, lessonFour, lessonFive]
   .sort((first, second) => first.id - second.id)
 
 const shuffled = <T,>(items: T[]) =>

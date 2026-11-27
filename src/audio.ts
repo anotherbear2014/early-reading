@@ -14,6 +14,8 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   'sound-a': { id: 'sound-a', src: publicAsset('audio/sounds/a.wav') },
   'sound-t': { id: 'sound-t', src: publicAsset('audio/sounds/t.wav') },
   'sound-r': { id: 'sound-r', src: publicAsset('audio/sounds/r.wav') },
+  'sound-i': { id: 'sound-i', src: publicAsset('audio/sounds/i.wav') },
+  'sound-n': { id: 'sound-n', src: publicAsset('audio/sounds/n.wav') },
   'welcome-instruction': {
     id: 'welcome-instruction',
     src: publicAsset('audio/lesson-1/welcome.wav'),
@@ -116,7 +118,7 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   },
   'tap-picture-s-instruction': {
     id: 'tap-picture-s-instruction',
-    src: publicAsset('audio/lesson-2/tap-picture-begins-with-s.wav'),
+    src: publicAsset('audio/prompts/tap-picture-begins-with-s.wav'),
   },
   'sun-correct-response': {
     id: 'sun-correct-response',
@@ -132,7 +134,7 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   },
   'tap-picture-m-instruction': {
     id: 'tap-picture-m-instruction',
-    src: publicAsset('audio/lesson-2/tap-picture-begins-with-m.wav'),
+    src: publicAsset('audio/prompts/tap-picture-begins-with-m.wav'),
   },
   'mouse-correct-response': {
     id: 'mouse-correct-response',
@@ -245,6 +247,94 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   'your-turn-say-word-instruction': {
     id: 'your-turn-say-word-instruction',
     src: publicAsset('audio/lesson-4/your-turn-say-word.wav'),
+  },
+  'lesson-5-welcome-instruction': {
+    id: 'lesson-5-welcome-instruction',
+    src: publicAsset('audio/lesson-5/welcome.wav'),
+  },
+  'lesson-5-review-instruction': {
+    id: 'lesson-5-review-instruction',
+    src: publicAsset('audio/lesson-5/tap-the-sounds.wav'),
+  },
+  'i-intro-instruction': {
+    id: 'i-intro-instruction',
+    src: publicAsset('audio/lesson-5/i-intro.wav'),
+  },
+  'n-intro-instruction': {
+    id: 'n-intro-instruction',
+    src: publicAsset('audio/lesson-5/n-intro.wav'),
+  },
+  'lesson-5-what-sound-instruction': {
+    id: 'lesson-5-what-sound-instruction',
+    src: publicAsset('audio/lesson-5/what-sound.wav'),
+  },
+  'igloo-i-instruction': {
+    id: 'igloo-i-instruction',
+    src: publicAsset('audio/lesson-5/igloo-i.wav'),
+  },
+  'iguana-i-instruction': {
+    id: 'iguana-i-instruction',
+    src: publicAsset('audio/lesson-5/iguana-i.wav'),
+  },
+  'italy-i-instruction': {
+    id: 'italy-i-instruction',
+    src: publicAsset('audio/lesson-5/italy-i.wav'),
+  },
+  'inchworm-i-instruction': {
+    id: 'inchworm-i-instruction',
+    src: publicAsset('audio/lesson-5/inchworm-i.wav'),
+  },
+  'nose-n-instruction': {
+    id: 'nose-n-instruction',
+    src: publicAsset('audio/lesson-5/nose-n.wav'),
+  },
+  'nest-n-instruction': {
+    id: 'nest-n-instruction',
+    src: publicAsset('audio/lesson-5/nest-n.wav'),
+  },
+  'necklace-n-instruction': {
+    id: 'necklace-n-instruction',
+    src: publicAsset('audio/lesson-5/necklace-n.wav'),
+  },
+  'no-n-instruction': {
+    id: 'no-n-instruction',
+    src: publicAsset('audio/lesson-5/no-n.wav'),
+  },
+  'trace-i-instruction': {
+    id: 'trace-i-instruction',
+    src: publicAsset('audio/lesson-5/trace-i.wav'),
+  },
+  'trace-n-instruction': {
+    id: 'trace-n-instruction',
+    src: publicAsset('audio/lesson-5/trace-n.wav'),
+  },
+  'tap-i-instruction': {
+    id: 'tap-i-instruction',
+    src: publicAsset('audio/prompts/tap-i.wav'),
+  },
+  'tap-n-instruction': {
+    id: 'tap-n-instruction',
+    src: publicAsset('audio/prompts/tap-n.wav'),
+  },
+  'tap-picture-i-instruction': {
+    id: 'tap-picture-i-instruction',
+    src: publicAsset('audio/prompts/tap-picture-begins-with-i.wav'),
+  },
+  'tap-picture-n-instruction': {
+    id: 'tap-picture-n-instruction',
+    src: publicAsset('audio/prompts/tap-picture-begins-with-n.wav'),
+  },
+  'igloo-correct-response': {
+    id: 'igloo-correct-response',
+    src: publicAsset('audio/lesson-5/yes-thats-the-igloo-good-job.wav'),
+  },
+  'nose-correct-response': {
+    id: 'nose-correct-response',
+    src: publicAsset('audio/lesson-5/yes-thats-the-nose-good-job.wav'),
+  },
+  'lesson-5-celebration-instruction': {
+    id: 'lesson-5-celebration-instruction',
+    src: publicAsset('audio/lesson-5/great-reading.wav'),
   },
 }
 

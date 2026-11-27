@@ -168,6 +168,8 @@ button {
   --letter-a-color: #24733f;
   --letter-t-color: #d46a18;
   --letter-r-color: #2563a9;
+  --letter-i-color: #16858b;
+  --letter-n-color: #843447;
   position: relative;
   height: 100svh;
   min-height: 500px;
@@ -285,6 +287,8 @@ button {
 .sound-button--a { color: var(--letter-a-color); }
 .sound-button--t { color: var(--letter-t-color); }
 .sound-button--r { color: var(--letter-r-color); }
+.sound-button--i { color: var(--letter-i-color); }
+.sound-button--n { color: var(--letter-n-color); }
 
 .sound-button--hero {
   width: min(52vh, 46vw);
@@ -331,6 +335,13 @@ button {
   height: 100%;
   object-fit: contain;
   pointer-events: none;
+}
+
+.picture-button--word {
+  color: #000;
+  font-size: min(22vh, 20vw, 11rem);
+  font-weight: 680;
+  line-height: 1;
 }
 
 .picture-button:active {
@@ -413,6 +424,20 @@ button {
   width: min(25vh, 13vw);
   height: min(25vh, 13vw);
   font-size: min(23vh, 12vw);
+}
+
+.choice-content--7 {
+  width: min(900px, 74vw);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-items: center;
+  gap: clamp(4px, 1vh, 10px) clamp(8px, 2vw, 24px);
+}
+
+.choice-content--7 .sound-button--choice {
+  width: min(21vh, 14vw);
+  height: min(21vh, 14vw);
+  font-size: min(19vh, 12.5vw);
 }
 
 .choice-stars {
@@ -592,6 +617,8 @@ button {
 .blend-glyph--a { color: var(--letter-a-color); }
 .blend-glyph--t { color: var(--letter-t-color); }
 .blend-glyph--r { color: var(--letter-r-color); }
+.blend-glyph--i { color: var(--letter-i-color); }
+.blend-glyph--n { color: var(--letter-n-color); }
 
 .word-practice-button {
   padding: 0 0.12em;

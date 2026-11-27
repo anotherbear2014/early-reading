@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { audioService } from './audio'
 import unicornImage from './assets/unicorn.png'
 import { BlendScreen } from './components/BlendScreen'
@@ -82,19 +82,27 @@ function ScreenContent({
     )
   }
 
-  if (screen.type === 'picture') {
-    const picture = pictures[screen.pictureId]
+  if (screen.type === 'picture' || screen.type === 'wordAssociation') {
+    const { label, image, audioId, soundId } = screen.type === 'picture'
+      ? pictures[screen.pictureId]
+      : {
+        label: screen.word,
+        image: undefined,
+        audioId: screen.instructionAudioId,
+        soundId: screen.soundId,
+      }
+
     return (
       <div className="picture-content">
         <button
-          className="picture-button"
+          className={image ? 'picture-button' : 'picture-button picture-button--word'}
           type="button"
-          aria-label={`Play ${picture.label}`}
-          onClick={() => void audioService.play(picture.audioId)}
+          aria-label={`Play ${label}`}
+          onClick={() => void audioService.play(audioId)}
         >
-          <img src={picture.image} alt={picture.label} />
+          {image ? <img src={image} alt={label} /> : label}
         </button>
-        <SoundButton soundId={picture.soundId} size="small" />
+        <SoundButton soundId={soundId} size="small" />
       </div>
     )
   }
@@ -125,6 +133,7 @@ function ScreenContent({
   }
 
   if (screen.type === 'pictureChoice') {
+    const targetSound = sounds[screen.requestedSoundId]
     const handlePictureChoice = (responseAudioId: string, correct?: boolean) => {
       void audioService.play(responseAudioId)
       if (correct) setChoiceCelebration((value) => value + 1)
@@ -132,7 +141,12 @@ function ScreenContent({
 
     return (
       <div className="picture-choice-screen">
-        <h2 className="choice-prompt">{screen.prompt}</h2>
+        <h2 className="choice-prompt">
+          Tap the picture that begins with{' '}
+          <strong style={{ color: `var(--letter-${targetSound.id}-color)` }}>
+            {targetSound.display}
+          </strong>.
+        </h2>
         <div className="picture-choice-content">
           {screen.choices.map((choice) => (
             <button
@@ -252,60 +266,125 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
   const [readyScreenId, setReadyScreenId] = useState<string | null>(null)
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [blendReplayToken, setBlendReplayToken] = useState(0)
+  const forwardLockedRef = useRef(true)
+  const transitionInProgressRef = useRef(false)
+  const screenEpochRef = useRef(0)
+  const instructionAttemptRef = useRef(0)
+  const entryStartedAtRef = useRef(0)
+  const unlockTimerRef = useRef(0)
   const screen = screens[screenIndex]
   const { instructionAudioId } = screen
   const isCelebration = screen.type === 'celebration'
-  const nextEnabled = readyScreenId === screen.id ||
-    screen.type === 'interactiveBlend' || screen.type === 'wordPractice'
-  const showLessonNavigation = nextEnabled && !isCelebration
+  const nextEnabled = readyScreenId === screen.id
+
+  const isFreeSoundReview = screen.type === 'soundChoice' && !screen.requestedSoundId
 
   const playInstruction = useCallback(() => {
-    if (instructionAudioId) return audioService.play(instructionAudioId, setIsSpeaking)
+    if (instructionAudioId) {
+      return audioService.play(instructionAudioId, setIsSpeaking, { stallTimeoutMs: 4_000 })
+    }
   }, [instructionAudioId])
 
-  useEffect(() => {
-    if (screen.type === 'blend' || screen.type === 'interactiveBlend') return
+  const unlockForward = useCallback((screenId: string, epoch: number, delayMs = 0) => {
+    window.clearTimeout(unlockTimerRef.current)
+    const finishUnlock = () => {
+      if (screenEpochRef.current !== epoch) return
+      forwardLockedRef.current = false
+      setReadyScreenId(screenId)
+    }
+    if (delayMs > 0) {
+      unlockTimerRef.current = window.setTimeout(finishUnlock, delayMs)
+    } else {
+      finishUnlock()
+    }
+  }, [])
 
-    let active = true
-    let fallbackTimer = 0
+  const releaseAfterPlayback = useCallback((
+    result: Awaited<ReturnType<typeof audioService.play>>,
+    screenId: string,
+    epoch: number,
+  ) => {
+    const elapsed = performance.now() - entryStartedAtRef.current
+    const minimumLockMs = isFreeSoundReview ? 750 : result === 'ended' ? 0 : 500
+    unlockForward(screenId, epoch, Math.max(0, minimumLockMs - elapsed))
+  }, [isFreeSoundReview, unlockForward])
+
+  const playEntryInstruction = useCallback((epoch: number) => {
+    const attempt = instructionAttemptRef.current + 1
+    instructionAttemptRef.current = attempt
+    window.clearTimeout(unlockTimerRef.current)
+
+    if (!instructionAudioId) {
+      unlockForward(screen.id, epoch, Math.max(0, 500 -
+        (performance.now() - entryStartedAtRef.current)))
+      return
+    }
 
     void playInstruction()?.then((result) => {
-      if (!active) return
-      if (result === 'ended') {
-        setReadyScreenId(screen.id)
-      } else {
-        fallbackTimer = window.setTimeout(() => {
-          if (active) setReadyScreenId(screen.id)
-        }, 800)
-      }
+      if (screenEpochRef.current !== epoch || instructionAttemptRef.current !== attempt) return
+      releaseAfterPlayback(result, screen.id, epoch)
     })
+  }, [instructionAudioId, playInstruction, releaseAfterPlayback, screen.id, unlockForward])
+
+  useLayoutEffect(() => {
+    forwardLockedRef.current = true
+    transitionInProgressRef.current = false
+    instructionAttemptRef.current = 0
+    entryStartedAtRef.current = performance.now()
+    window.clearTimeout(unlockTimerRef.current)
+  }, [screen.id])
+
+  useEffect(() => {
+    const epoch = screenEpochRef.current
+
+    if (screen.type === 'blend') return
+    if (screen.type === 'interactiveBlend' || screen.type === 'wordPractice') {
+      unlockForward(screen.id, epoch)
+      return
+    }
+
+    playEntryInstruction(epoch)
 
     return () => {
-      active = false
-      window.clearTimeout(fallbackTimer)
+      window.clearTimeout(unlockTimerRef.current)
       audioService.stop()
     }
-  }, [playInstruction, screen.id, screen.type])
+  }, [playEntryInstruction, screen.id, screen.type, unlockForward])
+
+  const lockForScreenTransition = () => {
+    forwardLockedRef.current = true
+    transitionInProgressRef.current = true
+    screenEpochRef.current += 1
+    instructionAttemptRef.current = 0
+    entryStartedAtRef.current = performance.now()
+    window.clearTimeout(unlockTimerRef.current)
+    setReadyScreenId(null)
+  }
 
   const goHome = () => {
+    screenEpochRef.current += 1
+    instructionAttemptRef.current = 0
+    window.clearTimeout(unlockTimerRef.current)
     audioService.stop()
     onHome()
   }
 
   const goNext = () => {
-    if (!nextEnabled || isCelebration) return
+    if (forwardLockedRef.current || transitionInProgressRef.current ||
+        !nextEnabled || isCelebration) return
+    lockForScreenTransition()
     audioService.stop()
     if (screenIndex === screens.length - 1) {
       onHome()
       return
     }
-    setReadyScreenId(null)
     setScreenIndex((index) => Math.min(index + 1, screens.length - 1))
   }
 
   const goBack = () => {
+    if (transitionInProgressRef.current) return
+    lockForScreenTransition()
     audioService.stop()
-    setReadyScreenId(null)
     if (screenIndex === 0) {
       onHome()
       return
@@ -318,12 +397,16 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
       setBlendReplayToken((token) => token + 1)
       return
     }
+    if (forwardLockedRef.current) {
+      playEntryInstruction(screenEpochRef.current)
+      return
+    }
     void playInstruction()
   }
 
   const handleBlendComplete = useCallback(() => {
-    setReadyScreenId(screen.id)
-  }, [screen.id])
+    unlockForward(screen.id, screenEpochRef.current)
+  }, [screen.id, unlockForward])
 
   return (
     <main className="lesson-screen">
@@ -359,20 +442,20 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
         </button>
       )}
 
-      {showLessonNavigation && (
-        <>
-          {screenIndex > 0 && (
-            <button
-              className="lesson-navigation-control back-control"
-              type="button"
-              onClick={goBack}
-              aria-label="Back"
-            >
-              <svg viewBox="0 0 96 96" aria-hidden="true">
-                <path d="M81 48H24M43 25 20 48l23 23" />
-              </svg>
-            </button>
-          )}
+      {!isCelebration && screenIndex > 0 && (
+        <button
+          className="lesson-navigation-control back-control"
+          type="button"
+          onClick={goBack}
+          aria-label="Back"
+        >
+          <svg viewBox="0 0 96 96" aria-hidden="true">
+            <path d="M81 48H24M43 25 20 48l23 23" />
+          </svg>
+        </button>
+      )}
+
+      {!isCelebration && nextEnabled && (
           <button
             className="lesson-navigation-control next-control"
             type="button"
@@ -383,10 +466,9 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
               <path d="M15 48h57M53 25l23 23-23 23" />
             </svg>
           </button>
-        </>
       )}
 
-      {isCelebration && (
+      {isCelebration && nextEnabled && (
         <div className="finish-actions">
           <button type="button" className="finish-button repeat-button" onClick={onRepeat}>
             <svg viewBox="0 0 48 48" aria-hidden="true">
@@ -435,8 +517,20 @@ function App() {
       }
       return []
     })
+    const lessonSoundIds = lesson.screens.flatMap((screen): SoundId[] => {
+      if (screen.type === 'sound' || screen.type === 'wordAssociation') return [screen.soundId]
+      if (screen.type === 'picture') return [pictures[screen.pictureId].soundId]
+      if (screen.type === 'soundChoice') return screen.sounds
+      if (screen.type === 'blend' || screen.type === 'interactiveBlend') {
+        return screen.blend.segments.map((segment) => segment.soundId)
+      }
+      if (screen.type === 'wordPractice') {
+        return screen.words.flatMap((word) => word.segments.map((segment) => segment.soundId))
+      }
+      return []
+    })
     const audioIds = [
-      ...Object.values(sounds).map((sound) => sound.audioId),
+      ...lessonSoundIds.map((soundId) => sounds[soundId].audioId),
       ...lesson.screens.flatMap(({ instructionAudioId }) => instructionAudioId ? [instructionAudioId] : []),
       ...responseAudioIds,
     ]

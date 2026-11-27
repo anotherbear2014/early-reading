@@ -1,4 +1,4 @@
-export type SoundId = 'm' | 's' | 'a' | 't' | 'r'
+export type SoundId = 'm' | 's' | 'a' | 't' | 'r' | 'i' | 'n'
 
 export interface SoundDefinition {
   id: SoundId
@@ -36,6 +36,12 @@ export interface PictureScreen extends BaseScreen {
   pictureId: string
 }
 
+export interface WordAssociationScreen extends BaseScreen {
+  type: 'wordAssociation'
+  word: string
+  soundId: SoundId
+}
+
 export interface SoundChoiceScreen extends BaseScreen {
   type: 'soundChoice'
   sounds: SoundId[]
@@ -55,7 +61,7 @@ export interface PictureChoice {
 
 export interface PictureChoiceScreen extends BaseScreen {
   type: 'pictureChoice'
-  prompt: string
+  requestedSoundId: SoundId
   choices: PictureChoice[]
 }
 
@@ -120,6 +126,7 @@ export type LessonScreen =
   | WelcomeScreen
   | SoundScreen
   | PictureScreen
+  | WordAssociationScreen
   | SoundChoiceScreen
   | PictureChoiceScreen
   | TracingScreen
