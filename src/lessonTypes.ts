@@ -1,4 +1,4 @@
-export type SoundId = 'm' | 's' | 'a' | 't' | 'r' | 'i' | 'n' | 'p' | 'f'
+export type SoundId = 'm' | 's' | 'a' | 't' | 'r' | 'i' | 'n' | 'p' | 'f' | 'o' | 'l'
 
 export interface SoundDefinition {
   id: SoundId

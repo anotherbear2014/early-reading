@@ -16,6 +16,9 @@ import mouseImage from './assets/pictures/mouse.png'
 import necklaceImage from './assets/pictures/necklace.png'
 import nestImage from './assets/pictures/nest.png'
 import noseImage from './assets/pictures/nose.png'
+import octopusImage from './assets/pictures/octopus.png'
+import ostrichImage from './assets/pictures/ostrich.png'
+import otterImage from './assets/pictures/otter.png'
 import pencilImage from './assets/pictures/pencil.png'
 import penguinImage from './assets/pictures/penguin.png'
 import pigImage from './assets/pictures/pig.png'
@@ -27,6 +30,10 @@ import sunImage from './assets/pictures/sun.png'
 import tableImage from './assets/pictures/table.png'
 import tacoImage from './assets/pictures/taco.png'
 import turtleImage from './assets/pictures/turtle.png'
+import lampImage from './assets/pictures/lamp.png'
+import leafImage from './assets/pictures/leaf.png'
+import lemonImage from './assets/pictures/lemon.png'
+import lionImage from './assets/pictures/lion.png'
 import type {
   BlendScreen,
   LessonDefinition,
@@ -47,6 +54,8 @@ export const sounds: Record<SoundId, SoundDefinition> = {
   n: { id: 'n', display: 'n', promptSound: 'nnnnn', audioId: 'sound-n' },
   p: { id: 'p', display: 'p', promptSound: 'p', audioId: 'sound-p' },
   f: { id: 'f', display: 'f', promptSound: 'fffff', audioId: 'sound-f' },
+  o: { id: 'o', display: 'o', promptSound: 'ooooo', audioId: 'sound-o' },
+  l: { id: 'l', display: 'l', promptSound: 'lllll', audioId: 'sound-l' },
 }
 
 const targetSoundChoice = (soundId: SoundId) => ({
@@ -250,9 +259,58 @@ export const pictures: Record<string, PictureDefinition> = {
     soundId: 'f',
     audioId: 'flower-f-instruction',
   },
+  ostrich: {
+    id: 'ostrich',
+    label: 'Ostrich',
+    image: ostrichImage,
+    soundId: 'o',
+    audioId: 'ostrich-o-instruction',
+  },
+  octopus: {
+    id: 'octopus',
+    label: 'Octopus',
+    image: octopusImage,
+    soundId: 'o',
+    audioId: 'octopus-o-instruction',
+  },
+  otter: {
+    id: 'otter',
+    label: 'Otter',
+    image: otterImage,
+    soundId: 'o',
+    audioId: 'otter-o-instruction',
+  },
+  leaf: {
+    id: 'leaf',
+    label: 'Leaf',
+    image: leafImage,
+    soundId: 'l',
+    audioId: 'leaf-l-instruction',
+  },
+  lion: {
+    id: 'lion',
+    label: 'Lion',
+    image: lionImage,
+    soundId: 'l',
+    audioId: 'lion-l-instruction',
+  },
+  lemon: {
+    id: 'lemon',
+    label: 'Lemon',
+    image: lemonImage,
+    soundId: 'l',
+    audioId: 'lemon-l-instruction',
+  },
+  lamp: {
+    id: 'lamp',
+    label: 'Lamp',
+    image: lampImage,
+    soundId: 'l',
+    audioId: 'lamp-l-instruction',
+  },
 }
 
-const tracingDefinitions: Record<'m' | 's' | 't' | 'r' | 'i' | 'n' | 'p' | 'f', TracingDefinition> = {
+const tracingDefinitions: Record<'m' | 's' | 't' | 'r' | 'i' | 'n' | 'p' | 'f' | 'o' | 'l', TracingDefinition> = {
   m: {
     viewBox: '0 0 680 460',
     startPoint: { x: 130, y: 75 },
@@ -370,6 +428,32 @@ const tracingDefinitions: Record<'m' | 's' | 't' | 'r' | 'i' | 'n' | 'p' | 'f', 
     touchTolerance: 92,
     completion: 'stars',
     ariaLabel: 'Trace the letter f from the upper hook down the stem, then across from left to right',
+  },
+  o: {
+    viewBox: '0 0 680 500',
+    startPoint: { x: 430, y: 118 },
+    phases: [
+      {
+        id: 'counterclockwise-loop',
+        path:
+          'M 430 118 C 370 78 270 82 218 142 C 160 208 168 329 226 389 C 280 445 382 444 438 388 C 500 326 506 207 452 143 C 446 136 439 127 430 118',
+      },
+    ],
+    strokeColor: 'var(--letter-o-color)',
+    touchTolerance: 92,
+    completion: 'stars',
+    ariaLabel: 'Trace the letter o counterclockwise from the upper right all the way around the loop',
+  },
+  l: {
+    viewBox: '0 0 680 500',
+    startPoint: { x: 340, y: 72 },
+    phases: [
+      { id: 'downstroke', path: 'M 340 72 L 340 424' },
+    ],
+    strokeColor: 'var(--letter-l-color)',
+    touchTolerance: 92,
+    completion: 'stars',
+    ariaLabel: 'Trace the letter l straight down from the top to the baseline',
   },
 }
 
@@ -1244,7 +1328,207 @@ export const lessonSix: LessonDefinition = {
   ],
 }
 
-export const lessons = [lessonOne, lessonTwo, lessonThree, lessonFour, lessonFive, lessonSix]
+export const lessonSeven: LessonDefinition = {
+  id: 7,
+  title: 'Lesson 7',
+  screens: [
+    {
+      id: 'lesson-7-welcome',
+      type: 'welcome',
+      title: 'Another Sound',
+      instructionAudioId: 'lesson-7-welcome-instruction',
+    },
+    {
+      id: 'lesson-7-opening-review',
+      type: 'soundChoice',
+      sounds: ['m', 's', 'a', 't', 'r', 'i', 'n', 'p', 'f'],
+      instructionAudioId: 'lesson-7-review-instruction',
+    },
+    {
+      id: 'introduce-o',
+      type: 'sound',
+      soundId: 'o',
+      instructionAudioId: 'o-intro-instruction',
+    },
+    {
+      id: 'replay-o',
+      type: 'sound',
+      soundId: 'o',
+      prompt: 'What sound is this? Say the sound then press the arrow.',
+      instructionAudioId: 'lesson-7-what-sound-instruction',
+    },
+    {
+      id: 'ostrich',
+      type: 'picture',
+      pictureId: 'ostrich',
+      instructionAudioId: 'ostrich-o-instruction',
+    },
+    {
+      id: 'octopus',
+      type: 'picture',
+      pictureId: 'octopus',
+      instructionAudioId: 'octopus-o-instruction',
+    },
+    {
+      id: 'otter',
+      type: 'picture',
+      pictureId: 'otter',
+      instructionAudioId: 'otter-o-instruction',
+    },
+    {
+      id: 'trace-o',
+      type: 'tracing',
+      instructionAudioId: 'trace-o-instruction',
+      tracing: tracingDefinitions.o,
+    },
+    {
+      id: 'introduce-l',
+      type: 'sound',
+      soundId: 'l',
+      instructionAudioId: 'l-intro-instruction',
+    },
+    {
+      id: 'replay-l',
+      type: 'sound',
+      soundId: 'l',
+      prompt: 'What sound is this? Say the sound then press the arrow.',
+      instructionAudioId: 'lesson-7-what-sound-instruction',
+    },
+    {
+      id: 'leaf',
+      type: 'picture',
+      pictureId: 'leaf',
+      instructionAudioId: 'leaf-l-instruction',
+    },
+    {
+      id: 'lion',
+      type: 'picture',
+      pictureId: 'lion',
+      instructionAudioId: 'lion-l-instruction',
+    },
+    {
+      id: 'lemon',
+      type: 'picture',
+      pictureId: 'lemon',
+      instructionAudioId: 'lemon-l-instruction',
+    },
+    {
+      id: 'lamp',
+      type: 'picture',
+      pictureId: 'lamp',
+      instructionAudioId: 'lamp-l-instruction',
+    },
+    {
+      id: 'trace-l',
+      type: 'tracing',
+      instructionAudioId: 'trace-l-instruction',
+      tracing: tracingDefinitions.l,
+    },
+    {
+      id: 'find-l-lesson-7',
+      type: 'soundChoice',
+      sounds: ['l', 'a'],
+      ...targetSoundChoice('l'),
+      highlightRequestedSound: true,
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'find-o-lesson-7',
+      type: 'soundChoice',
+      sounds: ['p', 'o'],
+      ...targetSoundChoice('o'),
+      highlightRequestedSound: true,
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'find-n-lesson-7',
+      type: 'soundChoice',
+      sounds: ['f', 'n', 't'],
+      ...targetSoundChoice('n'),
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'find-f-lesson-7',
+      type: 'soundChoice',
+      sounds: ['o', 'r', 'f'],
+      ...targetSoundChoice('f'),
+      correctFeedback: 'stars',
+    },
+    {
+      id: 'picture-choice-o',
+      type: 'pictureChoice',
+      ...targetPictureChoice('o'),
+      choices: [
+        {
+          id: 'pig',
+          label: 'Pig',
+          image: pigImage,
+          responseAudioId: 'pig-name-response',
+        },
+        {
+          id: 'octopus',
+          label: 'Octopus',
+          image: octopusImage,
+          responseAudioId: 'octopus-correct-response',
+          correct: true,
+        },
+        {
+          id: 'sun',
+          label: 'Sun',
+          image: sunImage,
+          responseAudioId: 'sun-name-response',
+        },
+      ],
+    },
+    {
+      id: 'picture-choice-l',
+      type: 'pictureChoice',
+      ...targetPictureChoice('l'),
+      choices: [
+        {
+          id: 'lamp',
+          label: 'Lamp',
+          image: lampImage,
+          responseAudioId: 'lamp-correct-response',
+          correct: true,
+        },
+        {
+          id: 'fish',
+          label: 'Fish',
+          image: fishImage,
+          responseAudioId: 'fish-name-response',
+        },
+        {
+          id: 'turtle',
+          label: 'Turtle',
+          image: turtleImage,
+          responseAudioId: 'turtle-response',
+        },
+      ],
+    },
+    {
+      id: 'lesson-7-free-review',
+      type: 'soundChoice',
+      sounds: ['m', 's', 'a', 't', 'r', 'i', 'n', 'p', 'f', 'o', 'l'],
+      instructionAudioId: 'lesson-7-review-instruction',
+    },
+    {
+      id: 'lesson-7-celebration',
+      type: 'celebration',
+      instructionAudioId: 'lesson-7-celebration-instruction',
+    },
+  ],
+}
+
+export const lessons = [
+  lessonOne,
+  lessonTwo,
+  lessonThree,
+  lessonFour,
+  lessonFive,
+  lessonSix,
+  lessonSeven,
+]
   .sort((first, second) => first.id - second.id)
 
 const shuffled = <T,>(items: T[]) =>

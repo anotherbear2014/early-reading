@@ -18,6 +18,8 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   'sound-n': { id: 'sound-n', src: publicAsset('audio/sounds/n.wav') },
   'sound-p': { id: 'sound-p', src: publicAsset('audio/sounds/p.wav') },
   'sound-f': { id: 'sound-f', src: publicAsset('audio/sounds/f.wav') },
+  'sound-o': { id: 'sound-o', src: publicAsset('audio/sounds/o.wav') },
+  'sound-l': { id: 'sound-l', src: publicAsset('audio/sounds/l.wav') },
   'welcome-instruction': {
     id: 'welcome-instruction',
     src: publicAsset('audio/lesson-1/welcome.wav'),
@@ -421,6 +423,98 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   'lesson-6-celebration-instruction': {
     id: 'lesson-6-celebration-instruction',
     src: publicAsset('audio/lesson-6/great-reading.wav'),
+  },
+  'lesson-7-welcome-instruction': {
+    id: 'lesson-7-welcome-instruction',
+    src: publicAsset('audio/lesson-7/welcome.wav'),
+  },
+  'lesson-7-review-instruction': {
+    id: 'lesson-7-review-instruction',
+    src: publicAsset('audio/lesson-7/tap-the-sounds.wav'),
+  },
+  'lesson-7-what-sound-instruction': {
+    id: 'lesson-7-what-sound-instruction',
+    src: publicAsset('audio/lesson-7/what-sound.wav'),
+  },
+  'o-intro-instruction': {
+    id: 'o-intro-instruction',
+    src: publicAsset('audio/lesson-7/o-intro.wav'),
+  },
+  'l-intro-instruction': {
+    id: 'l-intro-instruction',
+    src: publicAsset('audio/lesson-7/l-intro.wav'),
+  },
+  'ostrich-o-instruction': {
+    id: 'ostrich-o-instruction',
+    src: publicAsset('audio/lesson-7/ostrich-o.wav'),
+  },
+  'octopus-o-instruction': {
+    id: 'octopus-o-instruction',
+    src: publicAsset('audio/lesson-7/octopus-o.wav'),
+  },
+  'otter-o-instruction': {
+    id: 'otter-o-instruction',
+    src: publicAsset('audio/lesson-7/otter-o.wav'),
+  },
+  'leaf-l-instruction': {
+    id: 'leaf-l-instruction',
+    src: publicAsset('audio/lesson-7/leaf-l.wav'),
+  },
+  'lion-l-instruction': {
+    id: 'lion-l-instruction',
+    src: publicAsset('audio/lesson-7/lion-l.wav'),
+  },
+  'lemon-l-instruction': {
+    id: 'lemon-l-instruction',
+    src: publicAsset('audio/lesson-7/lemon-l.wav'),
+  },
+  'lamp-l-instruction': {
+    id: 'lamp-l-instruction',
+    src: publicAsset('audio/lesson-7/lamp-l.wav'),
+  },
+  'trace-o-instruction': {
+    id: 'trace-o-instruction',
+    src: publicAsset('audio/lesson-7/trace-o.wav'),
+  },
+  'trace-l-instruction': {
+    id: 'trace-l-instruction',
+    src: publicAsset('audio/lesson-7/trace-l.wav'),
+  },
+  'tap-o-instruction': {
+    id: 'tap-o-instruction',
+    src: publicAsset('audio/lesson-7/tap-o.wav'),
+  },
+  'tap-l-instruction': {
+    id: 'tap-l-instruction',
+    src: publicAsset('audio/lesson-7/tap-l.wav'),
+  },
+  'tap-picture-o-instruction': {
+    id: 'tap-picture-o-instruction',
+    src: publicAsset('audio/lesson-7/tap-picture-o.wav'),
+  },
+  'tap-picture-l-instruction': {
+    id: 'tap-picture-l-instruction',
+    src: publicAsset('audio/lesson-7/tap-picture-l.wav'),
+  },
+  'octopus-correct-response': {
+    id: 'octopus-correct-response',
+    src: publicAsset('audio/lesson-7/yes-thats-the-octopus-good-job.wav'),
+  },
+  'lamp-correct-response': {
+    id: 'lamp-correct-response',
+    src: publicAsset('audio/lesson-7/yes-thats-the-lamp-good-job.wav'),
+  },
+  'pig-name-response': {
+    id: 'pig-name-response',
+    src: publicAsset('audio/lesson-7/pig.wav'),
+  },
+  'fish-name-response': {
+    id: 'fish-name-response',
+    src: publicAsset('audio/lesson-7/fish.wav'),
+  },
+  'lesson-7-celebration-instruction': {
+    id: 'lesson-7-celebration-instruction',
+    src: publicAsset('audio/lesson-7/great-reading.wav'),
   },
 }
 

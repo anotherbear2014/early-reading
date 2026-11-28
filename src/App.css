@@ -172,6 +172,8 @@ button {
   --letter-n-color: #843447;
   --letter-p-color: #D32F2F;
   --letter-f-color: #B58A00;
+  --letter-o-color: #795548;
+  --letter-l-color: #536578;
   position: relative;
   height: 100svh;
   min-height: 500px;
@@ -284,7 +286,9 @@ button {
 .sound-button--t,
 .sound-button--r,
 .sound-button--p,
-.sound-button--f {
+.sound-button--f,
+.sound-button--o,
+.sound-button--l {
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -295,6 +299,8 @@ button {
 .sound-button--n { color: var(--letter-n-color); }
 .sound-button--p { color: var(--letter-p-color); }
 .sound-button--f { color: var(--letter-f-color); }
+.sound-button--o { color: var(--letter-o-color); }
+.sound-button--l { color: var(--letter-l-color); }
 
 .sound-button--hero {
   width: min(52vh, 46vw);
@@ -462,6 +468,25 @@ button {
 }
 
 .choice-content--9 .sound-button--choice:nth-child(6) {
+  grid-column: 2 / span 2;
+}
+
+.choice-content--11 {
+  width: min(980px, 78vw);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  justify-items: center;
+  gap: clamp(3px, 0.8vh, 8px) clamp(2px, 0.5vw, 8px);
+}
+
+.choice-content--11 .sound-button--choice {
+  grid-column: span 2;
+  width: min(20vh, 11vw);
+  height: min(20vh, 11vw);
+  font-size: min(18vh, 10vw);
+}
+
+.choice-content--11 .sound-button--choice:nth-child(7) {
   grid-column: 2 / span 2;
 }
 
@@ -646,6 +671,8 @@ button {
 .blend-glyph--n { color: var(--letter-n-color); }
 .blend-glyph--p { color: var(--letter-p-color); }
 .blend-glyph--f { color: var(--letter-f-color); }
+.blend-glyph--o { color: var(--letter-o-color); }
+.blend-glyph--l { color: var(--letter-l-color); }
 
 .word-practice-button {
   padding: 0 0.12em;
