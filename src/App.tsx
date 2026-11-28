@@ -116,7 +116,18 @@ function ScreenContent({
 
     return (
       <div className={`choice-screen${screen.prompt ? ' has-prompt' : ''}`}>
-        {screen.prompt && <h2 className="choice-prompt">{screen.prompt}</h2>}
+        {screen.prompt && (
+          <h2 className="choice-prompt">
+            {screen.highlightRequestedSound && screen.requestedSoundId ? (
+              <>
+                Tap the{' '}
+                <strong style={{ color: `var(--letter-${screen.requestedSoundId}-color)` }}>
+                  {sounds[screen.requestedSoundId].promptSound}
+                </strong>
+              </>
+            ) : screen.prompt}
+          </h2>
+        )}
         <div className={`choice-content choice-content--${screen.sounds.length}`}>
           {screen.sounds.map((soundId) => (
             <SoundButton
@@ -300,12 +311,11 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
   }, [])
 
   const releaseAfterPlayback = useCallback((
-    result: Awaited<ReturnType<typeof audioService.play>>,
     screenId: string,
     epoch: number,
   ) => {
     const elapsed = performance.now() - entryStartedAtRef.current
-    const minimumLockMs = isFreeSoundReview ? 750 : result === 'ended' ? 0 : 500
+    const minimumLockMs = isFreeSoundReview ? 750 : 500
     unlockForward(screenId, epoch, Math.max(0, minimumLockMs - elapsed))
   }, [isFreeSoundReview, unlockForward])
 
@@ -320,9 +330,9 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
       return
     }
 
-    void playInstruction()?.then((result) => {
+    void playInstruction()?.then(() => {
       if (screenEpochRef.current !== epoch || instructionAttemptRef.current !== attempt) return
-      releaseAfterPlayback(result, screen.id, epoch)
+      releaseAfterPlayback(screen.id, epoch)
     })
   }, [instructionAudioId, playInstruction, releaseAfterPlayback, screen.id, unlockForward])
 
@@ -442,7 +452,7 @@ function LessonPlayer({ screens, onHome, onRepeat }: LessonPlayerProps) {
         </button>
       )}
 
-      {!isCelebration && screenIndex > 0 && (
+      {!isCelebration && screenIndex > 0 && nextEnabled && (
         <button
           className="lesson-navigation-control back-control"
           type="button"

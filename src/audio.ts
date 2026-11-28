@@ -16,6 +16,8 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   'sound-r': { id: 'sound-r', src: publicAsset('audio/sounds/r.wav') },
   'sound-i': { id: 'sound-i', src: publicAsset('audio/sounds/i.wav') },
   'sound-n': { id: 'sound-n', src: publicAsset('audio/sounds/n.wav') },
+  'sound-p': { id: 'sound-p', src: publicAsset('audio/sounds/p.wav') },
+  'sound-f': { id: 'sound-f', src: publicAsset('audio/sounds/f.wav') },
   'welcome-instruction': {
     id: 'welcome-instruction',
     src: publicAsset('audio/lesson-1/welcome.wav'),
@@ -335,6 +337,90 @@ export const audioLibrary: Record<string, AudioDefinition> = {
   'lesson-5-celebration-instruction': {
     id: 'lesson-5-celebration-instruction',
     src: publicAsset('audio/lesson-5/great-reading.wav'),
+  },
+  'lesson-6-welcome-instruction': {
+    id: 'lesson-6-welcome-instruction',
+    src: publicAsset('audio/lesson-6/welcome.wav'),
+  },
+  'lesson-6-review-instruction': {
+    id: 'lesson-6-review-instruction',
+    src: publicAsset('audio/lesson-6/tap-the-sounds.wav'),
+  },
+  'lesson-6-what-sound-instruction': {
+    id: 'lesson-6-what-sound-instruction',
+    src: publicAsset('audio/lesson-6/what-sound.wav'),
+  },
+  'p-intro-instruction': {
+    id: 'p-intro-instruction',
+    src: publicAsset('audio/lesson-6/p-intro.wav'),
+  },
+  'f-intro-instruction': {
+    id: 'f-intro-instruction',
+    src: publicAsset('audio/lesson-6/f-intro.wav'),
+  },
+  'pig-p-instruction': {
+    id: 'pig-p-instruction',
+    src: publicAsset('audio/lesson-6/pig-p.wav'),
+  },
+  'penguin-p-instruction': {
+    id: 'penguin-p-instruction',
+    src: publicAsset('audio/lesson-6/penguin-p.wav'),
+  },
+  'pencil-p-instruction': {
+    id: 'pencil-p-instruction',
+    src: publicAsset('audio/lesson-6/pencil-p.wav'),
+  },
+  'fish-f-instruction': {
+    id: 'fish-f-instruction',
+    src: publicAsset('audio/lesson-6/fish-f.wav'),
+  },
+  'flower-f-instruction': {
+    id: 'flower-f-instruction',
+    src: publicAsset('audio/lesson-6/flower-f.wav'),
+  },
+  'trace-p-instruction': {
+    id: 'trace-p-instruction',
+    src: publicAsset('audio/lesson-6/trace-p.wav'),
+  },
+  'trace-f-instruction': {
+    id: 'trace-f-instruction',
+    src: publicAsset('audio/lesson-6/trace-f.wav'),
+  },
+  'tap-p-instruction': {
+    id: 'tap-p-instruction',
+    src: publicAsset('audio/lesson-6/tap-p.wav'),
+  },
+  'tap-f-instruction': {
+    id: 'tap-f-instruction',
+    src: publicAsset('audio/lesson-6/tap-f.wav'),
+  },
+  'tap-picture-p-instruction': {
+    id: 'tap-picture-p-instruction',
+    src: publicAsset('audio/lesson-6/tap-picture-p.wav'),
+  },
+  'tap-picture-f-instruction': {
+    id: 'tap-picture-f-instruction',
+    src: publicAsset('audio/lesson-6/tap-picture-f.wav'),
+  },
+  'pig-correct-response': {
+    id: 'pig-correct-response',
+    src: publicAsset('audio/lesson-6/yes-thats-the-pig-good-job.wav'),
+  },
+  'fish-correct-response': {
+    id: 'fish-correct-response',
+    src: publicAsset('audio/lesson-6/yes-thats-the-fish-good-job.wav'),
+  },
+  'sun-name-response': {
+    id: 'sun-name-response',
+    src: publicAsset('audio/lesson-6/sun.wav'),
+  },
+  'nest-name-response': {
+    id: 'nest-name-response',
+    src: publicAsset('audio/lesson-6/nest.wav'),
+  },
+  'lesson-6-celebration-instruction': {
+    id: 'lesson-6-celebration-instruction',
+    src: publicAsset('audio/lesson-6/great-reading.wav'),
   },
 }
 

@@ -1,4 +1,4 @@
-export type SoundId = 'm' | 's' | 'a' | 't' | 'r' | 'i' | 'n'
+export type SoundId = 'm' | 's' | 'a' | 't' | 'r' | 'i' | 'n' | 'p' | 'f'
 
 export interface SoundDefinition {
   id: SoundId
@@ -48,6 +48,7 @@ export interface SoundChoiceScreen extends BaseScreen {
   prompt?: string
   requestedSoundId?: SoundId
   correctFeedback?: 'stars'
+  highlightRequestedSound?: boolean
   randomizeOrder?: boolean
 }
 
